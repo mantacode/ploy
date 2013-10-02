@@ -27,7 +27,16 @@ describe Ploy::Publisher do
       expect(`dpkg-deb -f #{filename} Version`).to match(/master\.\d+/)
     end
 
+    it "makes a deb with a test file at the expected location" do
+      expect(`dpkg-deb -c #{filename}`).to match(/ \.\/usr\/local\/someproject\/file.txt\n/)
+    end
+
+    it "makes a deb an upstart script" do
+      expect(`dpkg-deb -c #{filename}`).to match(/ \.\/etc\/init\/some-project-initfile.conf\n/)
+    end
+
     after(:all) do
+      system("cp #{filename} test.deb") # temporary
       File.delete(filename)
     end
 

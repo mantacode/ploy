@@ -26,13 +26,25 @@ module Ploy
         { "-n" => @conf['deploy_name'] },
         { "-s" => "dir" },
         { "-t" => "deb" },
+        { "-C" => @conf['dist_dir'] },
         { "-v" => git_branch + '.' + git_timestamp },
-        @conf['dist_dir']
+        "."
       ]
+      if (@conf['prefix']) then
+        opts.unshift({ "--prefix" => @conf['prefix'] })
+      end
+
+      if (@conf['upstart_files']) then
+        @conf['upstart_files'].each do | upstart |
+          opts.unshift({ "--deb-upstart" => upstart })
+        end
+      end
+          
       pp opts
 
       opts_string = stringify_optlist(opts)
       cmd = "fpm #{opts_string}"
+      pp cmd
       info = eval(`#{cmd}`) # yes, really
 
       return info[:path]
