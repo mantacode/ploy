@@ -24,7 +24,7 @@ describe Ploy::Publisher do
     end
 
     it "sets a version that looks right" do
-      expect(`dpkg -I #{filename}`).to match(/Version: master\.\d+/)
+      expect(`dpkg-deb -f #{filename} Version`).to match(/master\.\d+/)
     end
 
     after(:all) do
