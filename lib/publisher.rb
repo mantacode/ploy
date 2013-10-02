@@ -26,8 +26,10 @@ module Ploy
         { "-n" => @conf['deploy_name'] },
         { "-s" => "dir" },
         { "-t" => "deb" },
+        { "-v" => git_branch + '.' + git_timestamp },
         @conf['dist_dir']
       ]
+      pp opts
 
       opts_string = stringify_optlist(opts)
       cmd = "fpm #{opts_string}"
@@ -53,6 +55,14 @@ module Ploy
         end
 
         return opts_flat.join(' ')
+      end
+
+      def git_branch
+        return `git symbolic-ref --short -q HEAD`.chomp
+      end
+
+      def git_timestamp
+        return `git log -1 --pretty=format:"%ct"`
       end
 
   end
