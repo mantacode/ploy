@@ -31,8 +31,12 @@ describe Ploy::Publisher do
       expect(`dpkg-deb -c #{filename}`).to match(/ \.\/usr\/local\/someproject\/file.txt\n/)
     end
 
-    it "makes a deb an upstart script" do
+    it "makes a deb with an upstart script" do
       expect(`dpkg-deb -c #{filename}`).to match(/ \.\/etc\/init\/some-project-initfile.conf\n/)
+    end
+
+    it "makes a deb with a metadata file" do
+      expect(`dpkg-deb -c #{filename}`).to match(/ \.\/etc\/ploy\/metadata.d\/some-project.yml\n/)
     end
 
     after(:all) do

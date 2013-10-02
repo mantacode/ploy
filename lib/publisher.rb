@@ -1,5 +1,6 @@
 require 'yaml'
 require 'tmpdir'
+require 'fileutils'
 
 module Ploy
   class Publisher
@@ -41,11 +42,10 @@ module Ploy
           end
         end
 
-        pp opts
+        write_metadata(dir)
 
         opts_string = stringify_optlist(opts)
         cmd = "fpm #{opts_string}"
-        pp cmd
         info = eval(`#{cmd}`) # yes, really
 
         return info[:path]
@@ -75,21 +75,22 @@ module Ploy
 
     def mirror_dist(dir)
       dist_target = dir
-      system("find #{dir}")
       if (@conf['prefix']) then
         dist_target = File.join(dist_target, @conf['prefix'])
       end
-      system("mkdir -p #{dist_target}")
+      FileUtils.mkpath dist_target
       system("rsync -aC #{@conf['dist_dir']}/* #{dist_target}")
     end
 
     def write_metadata(dir)
-      path = File.join(dir, ".ploy-metadata.yml")
+      base = File.join(dir, "/etc/ploy/metadata.d")
+      FileUtils.mkpath(base)
+      path = File.join(base, "#{@conf['deploy_name']}.yml")
       info = {
-        name      => @conf['deploy_name'],
-        sha       => git_revision,
-        timestamp => git_timestamp,
-        branch    => git_branch
+        :name      => @conf['deploy_name'],
+        :sha       => git_revision,
+        :timestamp => git_timestamp,
+        :branch    => git_branch
       }
       File.open(path, 'w') do | out |
         YAML.dump(info, out)
@@ -98,6 +99,10 @@ module Ploy
 
     def git_branch
       return `git symbolic-ref --short -q HEAD`.chomp
+    end
+
+    def git_revision
+      return `git rev-parse HEAD`.chomp
     end
 
     def git_timestamp
