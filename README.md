@@ -1,5 +1,13 @@
 # ploy
 
+Deployment tools.
+
+Tests -> Publish -> Expensive Tests -> Bless
+
+Loosely couples build and deploy steps.
+
+Intended for pull, rather than push, model.
+
 ## Usage
 
 ```
@@ -46,3 +54,13 @@ git_url: git@github.com:org/some-project
 last_committer: Bob Bobson <bob@example.com>
 
 ```
+
+## Requirements
+
+ - ruby 1.9+
+ - fpm
+ - rsync
+ - dpkg (for tests)
+
+Known to work on OSX.
+
