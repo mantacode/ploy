@@ -1,0 +1,7 @@
+---
+name: some-project-2
+sha: a7e4c66509f6ab1672f0b02f527a23c39a7937bc
+github_url: http://github.com/org/some-project-2
+git_url: git@github.com:org/some-project-2
+last_committer: Robert Bobson <bob@example.com>
+

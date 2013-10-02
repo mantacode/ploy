@@ -1,0 +1,8 @@
+---
+bucket: bucketname
+metadata_dir: /etc/ploy-metadata
+deployments:
+ - some-project
+ - another-project
+ - a-third-project
+
