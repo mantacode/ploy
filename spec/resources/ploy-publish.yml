@@ -2,7 +2,6 @@
 bucket: bucketname
 deploy_name: some-project
 dist_dir: spec/resources/dist
-prefix: /usr/local/someproject
 prep_cmd: lineman build
 prefix: /usr/local/someproject
 upstart_files:
