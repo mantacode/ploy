@@ -44,6 +44,7 @@ module Ploy
           { "-s" => "dir" },
           { "-t" => "deb" },
           { "-C" => dir },
+          "-f",
           { "-v" => git_branch + '.' + git_timestamp },
           "."
         ]
