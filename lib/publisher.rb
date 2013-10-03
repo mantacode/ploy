@@ -66,7 +66,8 @@ module Ploy
 
     def send(path)
       s3 = AWS::S3.new
-      s3.buckets[@conf['bucket']].objects[remote_target_name].write(:file => path)
+      pn = Pathname.new(path)
+      s3.buckets[@conf['bucket']].objects[remote_target_name].write(:file => pn)
     end
 
     def make_current

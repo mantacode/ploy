@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require './lib/cli'
+require 'cli'
 
 Ploy::Cli.new.run ARGV
 

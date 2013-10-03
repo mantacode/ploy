@@ -1,4 +1,4 @@
-require './lib/publisher'
+require 'publisher'
 
 module Ploy
   class Cli

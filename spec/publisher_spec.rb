@@ -71,7 +71,10 @@ describe Ploy::Publisher do
       uploadpath = @pub.remote_target_name # already tested, right?
 
       object = double("object")
-      object.should_receive(:write).with(:file => fakepath)
+      object.should_receive(:write) do | options |
+        f = options[:file]
+        expect(f).to be_a(Pathname)
+      end
 
       objects = double("objects")
       objects.should_receive(:[]).with(uploadpath) { object }
