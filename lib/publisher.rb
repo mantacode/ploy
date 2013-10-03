@@ -15,7 +15,10 @@ module Ploy
     end
 
     def publish
-      self.prep()
+      self.prep
+      pkgpath = self.package
+      self.send(pkgpath)
+      self.make_current # some embedded assumptions here
     end
 
     def prep
@@ -25,11 +28,11 @@ module Ploy
     end
 
     def remote_target_name
-      return [
-        @conf['deploy_name'],
-        git_branch,
-        "#{@conf['deploy_name']}_#{git_revision}.deb"
-      ].join('/')
+      return remote_name(@conf['deploy_name'], git_branch, git_revision)
+    end
+
+    def remote_current_copy_name
+      return remote_name(@conf['deploy_name'], git_branch, 'current')
     end
 
     def package
@@ -61,10 +64,14 @@ module Ploy
       end
     end
 
-
     def send(path)
       s3 = AWS::S3.new
       s3.buckets[@conf['bucket']].objects[remote_target_name].write(:file => path)
+    end
+
+    def make_current
+      s3 = AWS::S3.new
+      s3.buckets[@conf['bucket']].objects[remote_target_name].copy_to(remote_current_copy_name)
     end
 
     private
@@ -105,6 +112,14 @@ module Ploy
       File.open(path, 'w') do | out |
         YAML.dump(info, out)
       end
+    end
+
+    def remote_name(deploy,branch,rev)
+      return [
+        deploy,
+        branch,
+        "#{deploy}_#{rev}.deb"
+      ].join('/')
     end
 
     def git_branch

@@ -49,11 +49,19 @@ describe Ploy::Publisher do
   describe "#remote_target_name" do
     # uses git info for _this_ repo, to exercise some private methods, so
     # we can mock these elsewhere
-    it "should make the right name" do
+    it "should make the right remote target name" do
       branch = `git symbolic-ref --short -q HEAD`.chomp
       sha = `git rev-parse HEAD`.chomp
       path = "some-project/#{branch}/some-project_#{sha}.deb"
       expect(@pub.remote_target_name).to eq(path)
+    end
+  end
+
+  describe "#remote_current_copy_name" do
+    it "should make the right current copy name" do
+      branch = `git symbolic-ref --short -q HEAD`.chomp
+      path = "some-project/#{branch}/some-project_current.deb"
+      expect(@pub.remote_current_copy_name).to eq(path)
     end
   end
 
@@ -79,6 +87,31 @@ describe Ploy::Publisher do
       AWS::S3.stub(:new) { s3 }
       
       @pub.send(fakepath)
+    end
+  end
+
+  describe "#make_current" do
+    it "copies new deb to current" do
+      from = @pub.remote_target_name
+      to = @pub.remote_current_copy_name
+
+      object = double("object")
+      object.should_receive(:copy_to).with(to)
+
+      objects = double("objects")
+      objects.should_receive(:[]).with(from) { object }
+
+      bucket = double("bucket")
+      bucket.stub(:objects) { objects }
+
+      buckets = double("buckets")
+      buckets.should_receive(:[]).with("bucketname") { bucket }
+
+      s3 = double("s3")
+      s3.should_receive(:buckets) { buckets }
+      AWS::S3.stub(:new) { s3 }
+     
+      @pub.make_current
     end
   end
 
