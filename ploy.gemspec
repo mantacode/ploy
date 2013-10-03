@@ -8,7 +8,8 @@ Gem::Specification.new do |s|
   s.email = 'mbruce@manta.com'
   s.files = [
     'lib/cli.rb',
-    'lib/publisher.rb'
+    'lib/publisher.rb',
+    'lib/common.rb'
   ]
   s.executables << 'ploy'
 end
