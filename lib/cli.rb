@@ -1,3 +1,5 @@
+require './lib/publisher'
+
 module Ploy
   class Cli
     def run(argv)
