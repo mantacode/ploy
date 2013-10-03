@@ -2,6 +2,7 @@ require 'yaml'
 require 'tmpdir'
 require 'fileutils'
 require 'aws-sdk'
+require 'common'
 
 module Ploy
   class Publisher
@@ -28,11 +29,11 @@ module Ploy
     end
 
     def remote_target_name
-      return remote_name(@conf['deploy_name'], git_branch, git_revision)
+      return Ploy::Util.remote_name(@conf['deploy_name'], git_branch, git_revision)
     end
 
     def remote_current_copy_name
-      return remote_name(@conf['deploy_name'], git_branch, 'current')
+      return Ploy::Util.remote_name(@conf['deploy_name'], git_branch, 'current')
     end
 
     def package
@@ -114,14 +115,6 @@ module Ploy
       File.open(path, 'w') do | out |
         YAML.dump(info, out)
       end
-    end
-
-    def remote_name(deploy,branch,rev)
-      return [
-        deploy,
-        branch,
-        "#{deploy}_#{rev}.deb"
-      ].join('/')
     end
 
     def git_branch
