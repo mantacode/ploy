@@ -115,5 +115,16 @@ describe Ploy::Publisher do
     end
   end
 
+  describe "#publish" do
+    it "calls other methods correctly" do
+      @pub.should_receive(:prep)
+      @pub.should_receive(:package) { "testpath" }
+      @pub.should_receive(:send).with("testpath")
+      @pub.should_receive(:make_current)
+
+      @pub.publish
+    end
+  end
+
 end
 
