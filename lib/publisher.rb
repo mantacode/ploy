@@ -23,6 +23,14 @@ module Ploy
       end
     end
 
+    def remote_target_name
+      return [
+        @conf['deploy_name'],
+        git_branch,
+        "#{@conf['deploy_name']}_#{git_revision}.deb"
+      ].join('/')
+    end
+
     def package
       Dir.mktmpdir do |dir|
         mirror_dist(dir)
@@ -53,8 +61,9 @@ module Ploy
     end
 
 
-    def send
-
+    def send(path)
+      s3 = AWS::S3.new
+      s3.buckets[@conf['bucket']].objects[target].write(:file => path)
     end
 
     private

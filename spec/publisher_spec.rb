@@ -46,5 +46,40 @@ describe Ploy::Publisher do
 
   end
 
+  describe "#remote_target_name" do
+    # uses git info for _this_ repo, to exercise some private methods, so
+    # we can mock these elsewhere
+    it "should make the right name" do
+      branch = `git symbolic-ref --short -q HEAD`.chomp
+      sha = `git rev-parse HEAD`.chomp
+      path = "some-project/#{branch}/some-project_#{sha}.deb"
+      expect(@pub.remote_target_name).to eq(path)
+    end
+  end
+
+  describe "#send" do
+    it "pushes the deb to the right place" do
+      pending("not ready yet")
+      fakepath = "nothing.deb"
+
+      object = double("object")
+      object.should_receive(:write).with(:file => fakepath)
+
+      objects = double("objects")
+      objects.should_receive(:[]).with(uploadpath) { object }
+
+      bucket = double("bucket")
+      bucket.stub(:objects) { objects }
+
+      buckets = double("buckets")
+      buckets.should_receive(:[]).with("bucketname") { bucket }
+
+      s3 = double("s3")
+      s3.should_receive(:buckets) { buckets }
+      AWS::S3.stub(:new) { s3 }
+
+    end
+  end
+
 end
 
