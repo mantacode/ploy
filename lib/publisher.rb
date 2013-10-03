@@ -1,6 +1,7 @@
 require 'yaml'
 require 'tmpdir'
 require 'fileutils'
+require 'aws-sdk'
 
 module Ploy
   class Publisher
@@ -63,7 +64,7 @@ module Ploy
 
     def send(path)
       s3 = AWS::S3.new
-      s3.buckets[@conf['bucket']].objects[target].write(:file => path)
+      s3.buckets[@conf['bucket']].objects[remote_target_name].write(:file => path)
     end
 
     private

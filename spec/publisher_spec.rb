@@ -59,8 +59,8 @@ describe Ploy::Publisher do
 
   describe "#send" do
     it "pushes the deb to the right place" do
-      pending("not ready yet")
       fakepath = "nothing.deb"
+      uploadpath = @pub.remote_target_name # already tested, right?
 
       object = double("object")
       object.should_receive(:write).with(:file => fakepath)
@@ -77,7 +77,8 @@ describe Ploy::Publisher do
       s3 = double("s3")
       s3.should_receive(:buckets) { buckets }
       AWS::S3.stub(:new) { s3 }
-
+      
+      @pub.send(fakepath)
     end
   end
 
