@@ -8,6 +8,8 @@ Loosely couples build and deploy steps.
 
 Intended for pull, rather than push, model.
 
+Written in ruby, compiles as a ruby gem.
+
 ## Usage
 
 ```
@@ -15,6 +17,7 @@ $ ploy publish [.ploy-publish.yml]
 $ ploy receive /etc/ploy-receiver.yaml
 $ ploy receive /etc/ploy-receiver.yaml single-deployment
 $ ploy oracle /path/to/metadata.d
+$ ploy install $bucket $deploy $branch $version
 $ ploy bless $bucket $deploy $branch $version
 ```
 
@@ -55,6 +58,22 @@ last_committer: Bob Bobson <bob@example.com>
 
 ```
 
+## Development
+
+Improvements welcome. Error handling is minimal. Tests are thin in spots.
+
+### Run Tests
+
+```
+$ rspec spec
+```
+
+### Build gem file
+
+```
+$ gem build ploy.gemspec
+```
+
 ## Requirements
 
  - ruby 1.9+
@@ -62,5 +81,5 @@ last_committer: Bob Bobson <bob@example.com>
  - rsync
  - dpkg (for tests)
 
-Known to work on OSX.
+Known to work on OSX and Ubuntu.
 
