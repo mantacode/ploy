@@ -1,4 +1,5 @@
 require 'ploy/command/install'
+require 'ploy/command/publish'
 require 'ploy/command/help'
 
 module Ploy
@@ -6,8 +7,8 @@ module Ploy
     def self.lookup(topic)
       lookup = {
         'install' => Ploy::Command::Install,
-        'help'    => Ploy::Command::Help
-        #'publish' => Ploy::Command::Publish,
+        'help'    => Ploy::Command::Help,
+        'publish' => Ploy::Command::Publish,
       }
       mod = lookup[topic] || lookup['help']
       return mod.new
