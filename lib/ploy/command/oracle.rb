@@ -2,6 +2,9 @@ require 'sinatra'
 require 'json'
 require 'ploy/metasrc'
 
+# TODO: this needs tests. It is a Friday; I just don't have the brainpower
+# left to figure out how to test a subclassed sinatra.
+
 module Ploy
   module Command
     class OracleServer < Sinatra::Base
