@@ -23,6 +23,16 @@ describe Ploy::Cli do
       Ploy::Publisher.should_receive(:new).with("foo.yml") { pub }
       @cli.run(["publish","foo.yml"])
     end
+
+    it "will run Ploy::Installer#install when invoked with 'install' as first argument" do
+      bu = 'bucket'
+      d  = 'deploy'
+      br = 'branch'
+      v  = 'version'
+      Ploy::Installer.should_receive(:install).with(bu, d, br, v) { true }
+      @cli.run(["install", bu, d, br, v])
+    end
+
   end
 
 end

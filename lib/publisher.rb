@@ -44,9 +44,10 @@ module Ploy
           { "-n" => @conf['deploy_name'] },
           { "-s" => "dir" },
           { "-t" => "deb" },
+          { "-a" => "all" },
           { "-C" => dir },
           "-f",
-          { "-v" => git_branch + '.' + git_timestamp },
+          { "-v" => git_timestamp + '.' + git_branch },
           "."
         ]
 
@@ -69,12 +70,14 @@ module Ploy
     def send(path)
       s3 = AWS::S3.new
       pn = Pathname.new(path)
-      s3.buckets[@conf['bucket']].objects[remote_target_name].write(:file => pn)
+      object = s3.buckets[@conf['bucket']].objects[remote_target_name]
+      object.write(:file => pn)
     end
 
     def make_current
       s3 = AWS::S3.new
-      s3.buckets[@conf['bucket']].objects[remote_target_name].copy_to(remote_current_copy_name)
+      objects = s3.buckets[@conf['bucket']].objects
+      objects[remote_target_name].copy_to(remote_current_copy_name)
     end
 
     private
@@ -107,10 +110,10 @@ module Ploy
       FileUtils.mkpath(base)
       path = File.join(base, "#{@conf['deploy_name']}.yml")
       info = {
-        :name      => @conf['deploy_name'],
-        :sha       => git_revision,
-        :timestamp => git_timestamp,
-        :branch    => git_branch
+        "name"      => @conf['deploy_name'],
+        "sha"       => git_revision,
+        "timestamp" => git_timestamp,
+        "branch"    => git_branch
       }
       File.open(path, 'w') do | out |
         YAML.dump(info, out)

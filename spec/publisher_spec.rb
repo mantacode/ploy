@@ -24,7 +24,7 @@ describe Ploy::Publisher do
     end
 
     it "sets a version that looks right" do
-      expect(`dpkg-deb -f #{filename} Version`).to match(/master\.\d+/)
+      expect(`dpkg-deb -f #{filename} Version`).to match(/\d+\.master/)
     end
 
     it "makes a deb with a test file at the expected location" do
@@ -98,11 +98,11 @@ describe Ploy::Publisher do
       from = @pub.remote_target_name
       to = @pub.remote_current_copy_name
 
-      object = double("object")
-      object.should_receive(:copy_to).with(to)
+      from_obj = double("from_obj")
+      from_obj.should_receive(:copy_to).with(to)
 
       objects = double("objects")
-      objects.should_receive(:[]).with(from) { object }
+      objects.should_receive(:[]).with(from) { from_obj }
 
       bucket = double("bucket")
       bucket.stub(:objects) { objects }

@@ -9,7 +9,10 @@ Gem::Specification.new do |s|
   s.files = [
     'lib/cli.rb',
     'lib/publisher.rb',
+    'lib/installer.rb',
     'lib/common.rb'
   ]
+  s.add_runtime_dependency 'aws-sdk'
+  s.add_runtime_dependency 'fpm'
   s.executables << 'ploy'
 end

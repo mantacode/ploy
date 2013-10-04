@@ -8,7 +8,7 @@ describe Ploy::Installer do
       from = "some-project/master/some-project_current.deb"
 
       object = double("object")
-      object.should_receive(:write)
+      object.should_receive(:read)
 
       objects = double("objects")
       objects.should_receive(:[]).with(from) { object }
