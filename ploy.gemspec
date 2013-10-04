@@ -7,13 +7,6 @@ Gem::Specification.new do |s|
   s.authors = ["Michael Bruce"]
   s.email = 'mbruce@manta.com'
   s.files += Dir['lib/**/*.rb']
-  #s.files = [
-  #  'lib/ploy/cli.rb',
-  #  'lib/ploy/publisher.rb',
-  #  'lib/ploy/installer.rb',
-  #  'lib/ploy/common.rb'
-  #  'lib/ploy/common.rb'
-  #]
   s.add_runtime_dependency 'aws-sdk'
   s.add_runtime_dependency 'fpm'
   s.executables << 'ploy'
