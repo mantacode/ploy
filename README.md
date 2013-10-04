@@ -13,13 +13,16 @@ Written in ruby, compiles as a ruby gem.
 ## Usage
 
 ```
+$ ploy help [command]
 $ ploy publish [.ploy-publish.yml]
-$ ploy receive /etc/ploy-receiver.yaml
-$ ploy receive /etc/ploy-receiver.yaml single-deployment
 $ ploy oracle /path/to/metadata.d
 $ ploy install $bucket $deploy $branch $version
-$ ploy bless $bucket $deploy $branch $version
+$ ploy receive /etc/ploy-receiver.yaml # not implemented yet
+$ ploy receive /etc/ploy-receiver.yaml single-deployment # not implemented yet
+$ ploy bless $bucket $deploy $branch $version # not implemented yet
 ```
+
+The 'help' command actually works, so you should definitely use that.
 
 ### .ploy-publish.yml
 
