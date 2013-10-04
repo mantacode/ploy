@@ -8,4 +8,9 @@ describe Ploy::Command::Install do
       expect(Ploy::Command::Install.new.run(argv)).to be_true
     end
   end
+  describe "#help" do
+    it "will return a non-empty help string" do
+      expect(Ploy::Command::Install.new.help).to match(/.+/) # meh
+    end
+  end
 end
