@@ -9,5 +9,6 @@ Gem::Specification.new do |s|
   s.files += Dir['lib/**/*.rb']
   s.add_runtime_dependency 'aws-sdk'
   s.add_runtime_dependency 'fpm'
+  s.add_runtime_dependency 'sinatra'
   s.executables << 'ploy'
 end
