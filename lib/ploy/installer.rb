@@ -1,5 +1,5 @@
 require 'tempfile'
-require 'common'
+require 'ploy/common'
 
 module Ploy
   class Installer

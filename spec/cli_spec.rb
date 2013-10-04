@@ -1,4 +1,4 @@
-require './lib/cli'
+require './lib/ploy/cli'
 
 describe Ploy::Cli do
   before do

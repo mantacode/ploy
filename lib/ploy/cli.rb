@@ -1,5 +1,5 @@
-require 'publisher'
-require 'installer'
+require 'ploy/installer'
+require 'ploy/publisher'
 
 module Ploy
   class Cli

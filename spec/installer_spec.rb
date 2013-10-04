@@ -1,4 +1,4 @@
-require 'installer'
+require 'ploy/installer'
 
 describe Ploy::Installer do
   describe "#installer" do

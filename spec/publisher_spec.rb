@@ -1,4 +1,4 @@
-require './lib/publisher'
+require './lib/ploy/publisher'
 
 describe Ploy::Publisher do
   before(:all) do

@@ -2,7 +2,7 @@ require 'yaml'
 require 'tmpdir'
 require 'fileutils'
 require 'aws-sdk'
-require 'common'
+require 'ploy/common'
 
 module Ploy
   class Publisher

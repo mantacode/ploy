@@ -1,4 +1,4 @@
-require 'common'
+require 'ploy/common'
 
 describe Ploy::Util do
   describe '#remote_name' do
