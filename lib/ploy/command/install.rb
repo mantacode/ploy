@@ -1,4 +1,4 @@
-require 'ploy/command'
+require 'ploy/command/base'
 
 module Ploy
   module Command
@@ -22,6 +22,7 @@ Summary:
   The install command will download and install a package that matches the
   specification given on the command line. It does not check to see whether
   anything is currently installed.
+
 helptext
       end
     end

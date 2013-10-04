@@ -10,29 +10,18 @@ describe Ploy::Cli do
   end
 
   describe "#run" do
-    it "will run Ploy::Publisher#publish when invoked with 'publish' as first argument" do
-      pub = double("publisher")
-      pub.should_receive(:publish) { true }
-      Ploy::Publisher.should_receive(:new) { pub }
-      @cli.run(["publish"])
+    it "will lookup a command and run it with arguments" do
+      command = double("command")
+      command.should_receive(:run).with(['val'])
+      Ploy::Command.should_receive(:lookup).with('cmd') { command }
+      @cli.run(['cmd', 'val'])
     end
-
-    it "will run Publisher#publish with an argument if one is passed in argv" do
-      pub = double("publisher")
-      pub.should_receive(:publish) { true }
-      Ploy::Publisher.should_receive(:new).with("foo.yml") { pub }
-      @cli.run(["publish","foo.yml"])
+    it "will run help by default" do
+      command = double("command")
+      command.should_receive(:run).with([])
+      Ploy::Command.should_receive(:lookup).with('help') { command }
+      @cli.run([])
     end
-
-    it "will run Ploy::Installer#install when invoked with 'install' as first argument" do
-      bu = 'bucket'
-      d  = 'deploy'
-      br = 'branch'
-      v  = 'version'
-      Ploy::Installer.should_receive(:install).with(bu, d, br, v) { true }
-      @cli.run(["install", bu, d, br, v])
-    end
-
   end
 
 end
