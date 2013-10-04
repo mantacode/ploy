@@ -24,7 +24,8 @@ describe Ploy::Publisher do
     end
 
     it "sets a version that looks right" do
-      expect(`dpkg-deb -f #{filename} Version`).to match(/\d+\.master/)
+      branch = ENV['TRAVIS_BRANCH'] || `git symbolic-ref --short -q HEAD`.chomp
+      expect(`dpkg-deb -f #{filename} Version`).to match(/\d+\.#{branch}/)
     end
 
     it "makes a deb with a test file at the expected location" do
@@ -50,7 +51,7 @@ describe Ploy::Publisher do
     # uses git info for _this_ repo, to exercise some private methods, so
     # we can mock these elsewhere
     it "should make the right remote target name" do
-      branch = `git symbolic-ref --short -q HEAD`.chomp
+      branch = ENV['TRAVIS_BRANCH'] || `git symbolic-ref --short -q HEAD`.chomp
       sha = `git rev-parse HEAD`.chomp
       path = "some-project/#{branch}/some-project_#{sha}.deb"
       expect(@pub.remote_target_name).to eq(path)
@@ -59,7 +60,7 @@ describe Ploy::Publisher do
 
   describe "#remote_current_copy_name" do
     it "should make the right current copy name" do
-      branch = `git symbolic-ref --short -q HEAD`.chomp
+      branch = ENV['TRAVIS_BRANCH'] || `git symbolic-ref --short -q HEAD`.chomp
       path = "some-project/#{branch}/some-project_current.deb"
       expect(@pub.remote_current_copy_name).to eq(path)
     end

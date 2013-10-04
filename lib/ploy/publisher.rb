@@ -121,7 +121,7 @@ module Ploy
     end
 
     def git_branch
-      return `git symbolic-ref --short -q HEAD`.chomp
+      return ENV['TRAVIS_BRANCH'] || `git symbolic-ref --short -q HEAD`.chomp
     end
 
     def git_revision
