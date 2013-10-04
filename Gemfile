@@ -1,0 +1,5 @@
+source 'https://rubygems.org'
+gem 'rspec'
+gem 'aws-sdk'
+gem 'fpm'
+gem 'sinatra'

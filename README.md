@@ -1,5 +1,7 @@
 # ploy
 
+[![Build Status](https://magnum.travis-ci.com/mantacode/ploy.png?token=x2pVeg6qmsxSFb6xKLh7&branch=master)](https://magnum.travis-ci.com/mantacode/ploy)
+
 Deployment tools.
 
 Tests -> Publish -> Expensive Tests -> Bless
