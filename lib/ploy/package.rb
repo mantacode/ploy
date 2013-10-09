@@ -33,5 +33,13 @@ module Ploy
     def location
       return Ploy::Util.remote_name(@deploy, @branch, @version)
     end
+
+    def self.from_metadata(bucket, meta)
+      out = []
+      meta.each do |k,v|
+        out.push(self.new(bucket, v['name'], v['branch'], v['sha']))
+      end
+      return out
+    end
   end
 end

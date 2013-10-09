@@ -7,19 +7,28 @@ module Ploy
       def run(argv)
         o = {}
         optparser(o).parse!(argv)
-        pkg = Ploy::Package.new(o[:bucket], o[:deploy], o[:branch], o[:version])
-        pkg.bless
-        puts "blessed #{o[:deploy]}/#{o[:branch]} at #{o[:version]}"
+        pkgs = []
+        if (o[:datapath]) then
+          pkgs = Ploy::Package.from_metadata(File.read(o[:datapath]))
+        else
+          pkgs.push Ploy::Package.new(o[:bucket], o[:deploy], o[:branch], o[:version])
+        end
+
+        pkgs.each do |pkg|
+          pkg.bless
+          puts "blessed #{o[:deploy]}/#{o[:branch]} at #{o[:version]}"
+        end
       end
 
       def help
         return <<helptext
-usage: ploy -b BUCKET -d DEPLOYMENT -B BRANCH -v VERSION
+usage: ploy -b BUCKET [-d DEPLOYMENT -B BRANCH -v VERSION | -f DATAFILE]
 
 #{optparser}
 
 Examples:
   $ ploy bless -b deploybucket -d someproject -B master -v 6d4a094dcaad6e421f85b24c7c75153db72ab00c
+  $ ploy bless -b deploybucket -f /tmp/version_info.json
 
 Summary
 
@@ -45,6 +54,9 @@ helptext
           end
           opts.on("-v", "--version VERSION", "use the given version") do |v|
             o[:version] = v
+          end
+          opts.on("-f", "--data-file PATH", "load a set of dep/branch/version data from a", "version file compatible with ploy oracle output") do |path|
+            o[:datapath] = path
           end
         end
         return options

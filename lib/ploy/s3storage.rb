@@ -16,7 +16,6 @@ module Ploy
     end
     
     def get(from, fileio)
-      puts from
       AWS::S3.new.buckets[@bucketname].objects[from].read do |chunk|
         fileio.write(chunk)
       end

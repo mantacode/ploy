@@ -34,6 +34,7 @@ describe Ploy::Package do
       expect(@inst.location).to eq(Ploy::Util.remote_name("some-project", "master", "current"))
     end
   end
+
   describe "#bless" do
     it "copies to a blessed location" do
       Ploy::S3Storage.any_instance.should_receive(:copy).with(
@@ -41,6 +42,30 @@ describe Ploy::Package do
         Ploy::Util.remote_name("some-project", "master", "current", true)
       )
       @inst.bless
+    end
+  end
+
+  describe "Package.from_metadata" do
+    it "returns a list of package objects" do
+      meta = {
+        'one' => {
+          'name' => 'one',
+          'sha' => 'abcd',
+          'branch' => 'branchname'
+        },
+        'two' => {
+          'name' => 'two',
+          'sha' => 'abcd',
+          'branch' => 'branchname'
+        },
+        'three' => {
+          'name' => 'three',
+          'sha' => 'abcd',
+          'branch' => 'branchname'
+        },
+      }
+      packages = Ploy::Package.from_metadata('bucketname', meta)
+      expect(packages.length).to eq(3)
     end
   end
 end
