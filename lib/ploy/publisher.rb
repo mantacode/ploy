@@ -3,16 +3,18 @@ require 'tmpdir'
 require 'fileutils'
 require 'aws-sdk'
 require 'ploy/common'
+require 'ploy/s3storage'
 
 module Ploy
   class Publisher
     def initialize(conf_source)
-          @conf = conf_source
-          if (/^---/ =~ conf_source) then
-            @conf = YAML::load(conf_source)
-          else
-            @conf = YAML::load_file(conf_source)
-          end
+      @conf = conf_source
+      if (/^---/ =~ conf_source) then
+        @conf = YAML::load(conf_source)
+      else
+        @conf = YAML::load_file(conf_source)
+      end
+      @storage = Ploy::S3Storage.new(@conf['bucket'])
     end
 
     def publish
@@ -68,16 +70,11 @@ module Ploy
     end
 
     def send(path)
-      s3 = AWS::S3.new
-      pn = Pathname.new(path)
-      object = s3.buckets[@conf['bucket']].objects[remote_target_name]
-      object.write(:file => pn)
+      @storage.put(path, remote_target_name)
     end
 
     def make_current
-      s3 = AWS::S3.new
-      objects = s3.buckets[@conf['bucket']].objects
-      objects[remote_target_name].copy_to(remote_current_copy_name)
+      @storage.copy(remote_target_name, remote_current_copy_name)
     end
 
     private

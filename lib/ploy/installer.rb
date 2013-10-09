@@ -1,15 +1,13 @@
 require 'tempfile'
 require 'ploy/common'
+require 'ploy/s3storage'
 
 module Ploy
   class Installer
     def Installer.install(bucket, deploy, branch, version)
       loc = Ploy::Util.remote_name(deploy, branch, version)
       Tempfile.open(['ploy', '.deb']) do |f|
-        AWS::S3.new.buckets[bucket].objects[loc].read do |chunk|
-          f.write(chunk)
-        end
-        f.flush # this is kind of important, it turns out
+        Ploy::S3Storage.new(bucket).get(loc, f)
         system("dpkg -i #{f.path}")
       end
     end

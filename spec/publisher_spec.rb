@@ -70,26 +70,7 @@ describe Ploy::Publisher do
     it "pushes the deb to the right place" do
       fakepath = "nothing.deb"
       uploadpath = @pub.remote_target_name # already tested, right?
-
-      object = double("object")
-      object.should_receive(:write) do | options |
-        f = options[:file]
-        expect(f).to be_a(Pathname)
-      end
-
-      objects = double("objects")
-      objects.should_receive(:[]).with(uploadpath) { object }
-
-      bucket = double("bucket")
-      bucket.stub(:objects) { objects }
-
-      buckets = double("buckets")
-      buckets.should_receive(:[]).with("bucketname") { bucket }
-
-      s3 = double("s3")
-      s3.should_receive(:buckets) { buckets }
-      AWS::S3.stub(:new) { s3 }
-      
+      Ploy::S3Storage.any_instance.should_receive(:put).with(fakepath, uploadpath)
       @pub.send(fakepath)
     end
   end
@@ -98,23 +79,7 @@ describe Ploy::Publisher do
     it "copies new deb to current" do
       from = @pub.remote_target_name
       to = @pub.remote_current_copy_name
-
-      from_obj = double("from_obj")
-      from_obj.should_receive(:copy_to).with(to)
-
-      objects = double("objects")
-      objects.should_receive(:[]).with(from) { from_obj }
-
-      bucket = double("bucket")
-      bucket.stub(:objects) { objects }
-
-      buckets = double("buckets")
-      buckets.should_receive(:[]).with("bucketname") { bucket }
-
-      s3 = double("s3")
-      s3.should_receive(:buckets) { buckets }
-      AWS::S3.stub(:new) { s3 }
-     
+      Ploy::S3Storage.any_instance.should_receive(:copy).with(from, to)
       @pub.make_current
     end
   end
