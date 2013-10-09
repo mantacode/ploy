@@ -1,5 +1,3 @@
-require 'ploy/installer'
-require 'ploy/publisher'
 require 'ploy/command'
 
 module Ploy
