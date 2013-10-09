@@ -24,7 +24,10 @@ module Ploy
     end
 
     def bless
-      Ploy::S3Storage.copy(location, Ploy::Util.remote_name(@deploy, @branch, @version, true))
+      Ploy::S3Storage.new(@bucketname).copy(
+        location,
+        Ploy::Util.remote_name(@deploy, @branch, @version, true)
+      )
     end
 
     def location

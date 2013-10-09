@@ -1,12 +1,16 @@
 module Ploy
   module Util
 
-    def Util.remote_name(deploy,branch,rev)
-      return [
+    def Util.remote_name(deploy,branch,rev, blessed = false)
+      r = [
         deploy,
         branch,
         "#{deploy}_#{rev}.deb"
-      ].join('/')
+      ]
+      if (blessed) then
+        r.unshift('blessed')
+      end
+      return r.join('/')
     end
 
   end

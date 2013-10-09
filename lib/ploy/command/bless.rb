@@ -1,5 +1,5 @@
 require 'ploy/command/base'
-require 'ploy/blesser'
+require 'ploy/package'
 
 module Ploy
   module Command
@@ -7,8 +7,9 @@ module Ploy
       def run(argv)
         o = {}
         optparser(o).parse!(argv)
-        blessr = Ploy::Blesser.new(o[:bucket], o[:deploy], o[:branch], o[:version])
-        blessr.bless
+        pkg = Ploy::Package.new(o[:bucket], o[:deploy], o[:branch], o[:version])
+        pkg.bless
+        puts "blessed #{o[:deploy]}/#{o[:branch]} at #{o[:version]}"
       end
 
       def help

@@ -13,6 +13,7 @@ usage: ploy [command] [options]
 Commands:
   publish         Package the current git repository and send to S3
   install         Pull a deployment from S3 and install on current system
+  bless           Mark a package as tested for production use
   help            Show helps
 
 helptext

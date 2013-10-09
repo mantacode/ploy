@@ -1,4 +1,5 @@
 require 'ploy/command/base'
+require 'ploy/publisher'
 
 module Ploy
   module Command
