@@ -5,6 +5,7 @@ module Ploy
     class Publish < Base
       def run(argv)
         Ploy::Publisher.new(argv.shift || '.ploy-publisher.yml').publish
+        puts "ploy publish ok"
         return true
       end
 
