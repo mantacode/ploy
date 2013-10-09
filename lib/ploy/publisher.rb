@@ -48,6 +48,7 @@ module Ploy
           { "-t" => "deb" },
           { "-a" => "all" },
           { "-C" => dir },
+          { "--deb-field" => "'gitrev: #{git_revision}'" },
           "-f",
           { "-v" => git_timestamp + '.' + git_branch },
           "."
@@ -70,7 +71,7 @@ module Ploy
     end
 
     def send(path)
-      @storage.put(path, remote_target_name)
+      @storage.put(path, remote_target_name, {'git_revision' => git_revision})
     end
 
     def make_current

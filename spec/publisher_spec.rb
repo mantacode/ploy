@@ -40,9 +40,13 @@ describe Ploy::Publisher do
       expect(`dpkg-deb -c #{filename}`).to match(/ \.\/etc\/ploy\/metadata.d\/some-project.yml\n/)
     end
 
+    it "makes a deb with a git revision field" do
+      expect(`dpkg-deb -f #{filename} gitrev`).to match(/...\n/) # not empty
+    end
+
     after(:all) do
       system("cp #{filename} test.deb") # temporary
-      File.delete(filename)
+      #File.delete(filename)
     end
 
   end
@@ -70,7 +74,7 @@ describe Ploy::Publisher do
     it "pushes the deb to the right place" do
       fakepath = "nothing.deb"
       uploadpath = @pub.remote_target_name # already tested, right?
-      Ploy::S3Storage.any_instance.should_receive(:put).with(fakepath, uploadpath)
+      Ploy::S3Storage.any_instance.should_receive(:put).with(fakepath, uploadpath, an_instance_of(Hash))
       @pub.send(fakepath)
     end
   end

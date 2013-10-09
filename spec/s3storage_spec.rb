@@ -13,9 +13,10 @@ describe Ploy::S3Storage do
       uploadpath = "foo/bar"
 
       object = double("object")
-      object.should_receive(:write) do | options |
+      object.should_receive(:write) do | options,opts2 |
         f = options[:file]
         expect(f).to be_a(Pathname)
+        expect(opts2).to be_a(Hash)
       end
 
       objects = double("objects")

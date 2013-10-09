@@ -4,8 +4,11 @@ module Ploy
       @bucketname = bucket
     end
 
-    def put(path, name)
-      AWS::S3.new.buckets[@bucketname].objects[name].write(:file => Pathname.new(path))
+    def put(path, name, meta = {})
+      AWS::S3.new.buckets[@bucketname].objects[name].write(
+        { :file => Pathname.new(path) },
+        { :metadata => meta }
+      )
     end
 
     def copy(from, to)
