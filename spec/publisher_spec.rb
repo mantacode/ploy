@@ -46,7 +46,7 @@ describe Ploy::Publisher do
 
     after(:all) do
       system("cp #{filename} test.deb") # temporary
-      #File.delete(filename)
+      File.delete(filename)
     end
 
   end

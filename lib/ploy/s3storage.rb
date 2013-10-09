@@ -6,8 +6,8 @@ module Ploy
 
     def put(path, name, meta = {})
       AWS::S3.new.buckets[@bucketname].objects[name].write(
-        { :file => Pathname.new(path) },
-        { :metadata => meta }
+        Pathname.new(path),
+        { :metadata => meta },
       )
     end
 
@@ -16,10 +16,20 @@ module Ploy
     end
     
     def get(from, fileio)
+      puts from
       AWS::S3.new.buckets[@bucketname].objects[from].read do |chunk|
         fileio.write(chunk)
       end
       fileio.flush
+    end
+
+    def metadata(loc)
+      o = AWS::S3.new.buckets[@bucketname].objects[loc] 
+      if (o.exists?) then
+        return o.metadata
+      else
+        return {}
+      end
     end
   end
 end

@@ -18,10 +18,8 @@ Written in ruby, compiles as a ruby gem.
 $ ploy help [command]
 $ ploy publish [.ploy-publish.yml]
 $ ploy oracle /path/to/metadata.d
-$ ploy install $bucket $deploy $branch $version
-$ ploy receive /etc/ploy-receiver.yaml # not implemented yet
-$ ploy receive /etc/ploy-receiver.yaml single-deployment # not implemented yet
-$ ploy bless $bucket $deploy $branch $version # not implemented yet
+$ ploy install -b BUCKET -d DEPLOYMENT [-B BRANCH] [-v VERSION]
+$ ploy bless -b BUCKET -d DEPLOYMENT -B BRANCH -v VERSION # not implemented yet
 ```
 
 The 'help' command actually works, so you should definitely use that.
@@ -36,19 +34,6 @@ dist_dir: dist
 prep_cmd: lineman build
 upstart_files:
  - conf/some-project-initfile
-```
-
-### ploy-receiver.yml
-
-```
----
-bucket: bucketname
-metadata_dir: /etc/ploy-metadata
-deployments:
- - some-project
- - another-project
- - a-third-project
-
 ```
 
 ### metadata files

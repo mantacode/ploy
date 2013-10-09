@@ -8,14 +8,18 @@ module Ploy
         o = {
           :version => 'current',
           :branch  => 'master',
+          :check   => true,
         }
         optparser(o).parse!(argv)
-        Ploy::Installer.install(o[:bucket], o[:deploy], o[:branch], o[:version])
-        puts "installed #{o[:deploy]}"
+        inst = Ploy::Installer.new(o[:bucket], o[:deploy], o[:branch], o[:version])
+        if (!o[:check] || inst.check_new_version)
+          inst.install()
+          puts "installed #{o[:deploy]}"
+        else
+          puts "no new version available"
+        end
         return true
       end
-
-
 
       def help
         return <<helptext
@@ -31,8 +35,8 @@ Examples:
 Summary:
 
   The install command will download and install a package that matches the
-  specification given on the command line. It does not check to see whether
-  anything is currently installed.
+  specification given on the command line. If the available version has the
+  same git revision as a currently installed version, it will do nothing.
 
 helptext
 
