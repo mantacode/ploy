@@ -1,5 +1,6 @@
 require 'ploy/command/base'
 require 'optparse'
+require 'ploy/package'
 
 module Ploy
   module Command
@@ -11,9 +12,9 @@ module Ploy
           :check   => true,
         }
         optparser(o).parse!(argv)
-        inst = Ploy::Installer.new(o[:bucket], o[:deploy], o[:branch], o[:version])
-        if (!o[:check] || inst.check_new_version)
-          inst.install()
+        pkg = Ploy::Package.new(o[:bucket], o[:deploy], o[:branch], o[:version])
+        if (!o[:check] || pkg.check_new_version)
+          pkg.install()
           puts "installed #{o[:deploy]}"
         else
           puts "no new version available"
