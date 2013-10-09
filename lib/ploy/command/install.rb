@@ -5,7 +5,10 @@ module Ploy
   module Command
     class Install < Base
       def run(argv)
-        o = {}
+        o = {
+          :version => 'current',
+          :branch  => 'master',
+        }
         optparser(o).parse!(argv)
         Ploy::Installer.install(o[:bucket], o[:deploy], o[:branch], o[:version])
         puts "installed #{o[:deploy]}"
