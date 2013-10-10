@@ -9,6 +9,7 @@ module Ploy
   module Command
     class OracleServer < Sinatra::Base
       set :port => 9876
+      set :bind => '0.0.0.0'
 
       def self.oracle_run(metasrc)
         @@metasrc = metasrc # this could not be sadder

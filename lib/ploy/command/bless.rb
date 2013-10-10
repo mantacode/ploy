@@ -1,5 +1,6 @@
 require 'ploy/command/base'
 require 'ploy/package'
+require 'json'
 
 module Ploy
   module Command
@@ -9,7 +10,7 @@ module Ploy
         optparser(o).parse!(argv)
         pkgs = []
         if (o[:datapath]) then
-          pkgs = Ploy::Package.from_metadata(File.read(o[:datapath]))
+          pkgs = Ploy::Package.from_metadata(o[:bucket], JSON.parse(File.read(o[:datapath])))
         else
           pkgs.push Ploy::Package.new(o[:bucket], o[:deploy], o[:branch], o[:version])
         end
