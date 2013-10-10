@@ -19,7 +19,7 @@ $ ploy help [command]
 $ ploy publish [.ploy-publish.yml]
 $ ploy oracle /path/to/metadata.d
 $ ploy install -b BUCKET -d DEPLOYMENT [-B BRANCH] [-v VERSION]
-$ ploy bless -b BUCKET -d DEPLOYMENT -B BRANCH -v VERSION # not implemented yet
+$ ploy bless -b BUCKET -d DEPLOYMENT -B BRANCH -v VERSION
 ```
 
 The 'help' command actually works, so you should definitely use that.
