@@ -10,7 +10,17 @@ Loosely couples build and deploy steps.
 
 Intended for pull, rather than push, model.
 
-Written in ruby, compiles as a ruby gem.
+Written in Ruby, compiles as a Ruby Gem.
+
+Produces .deb packages, so currently only useful for deploying to Debian/Ubuntu-like
+systems.
+
+## Why
+
+We have a bunch of different services. All of them need to be tested separately, then
+tested together, then put into production. Along the way, many different testing or
+QA environments might need to run them.  Ploy provides facilities for making that 
+easy.
 
 ## Usage
 
@@ -20,6 +30,7 @@ $ ploy publish [.ploy-publish.yml]
 $ ploy oracle /path/to/metadata.d
 $ ploy install -b BUCKET -d DEPLOYMENT [-B BRANCH] [-v VERSION]
 $ ploy bless -b BUCKET -d DEPLOYMENT -B BRANCH -v VERSION
+$ ploy bless -b BUCKET -f INFO_FILE
 ```
 
 The 'help' command actually works, so you should definitely use that.
@@ -46,7 +57,20 @@ github_url: http://github.com/org/some-project
 git_url: git@github.com:org/some-project
 last_committer: Bob Bobson <bob@example.com>
 
+
 ```
+
+## Intended workflow
+
+ 1. A user pushes code to github
+ 2. A CI server (e.g. Travis) runs tests
+ 3. If the tests pass, the CI server calls "ploy publish" to publish the build
+ 4. Some test environment is polling for new builds with "ploy install", and
+    advertising available versions with "ploy oracle"
+ 5. A smoke test server is watching for changes in the report from "ploy oracle"
+ 6. When changes happen, it runs more tests
+ 7. If the tests pass, it calls "ploy bless"
+ 8. Production selects only from blessed builds
 
 ## Development
 
