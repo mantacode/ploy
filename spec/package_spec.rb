@@ -45,6 +45,26 @@ describe Ploy::Package do
     end
   end
 
+  describe "#upload" do
+    it "uploads a new file" do
+      fakepath = 'foo/bar.deb'
+      Ploy::S3Storage.any_instance.should_receive(:put).with(
+        fakepath, @inst.location, kind_of(Hash)
+      )
+      @inst.upload(fakepath)
+    end
+  end
+
+  describe "#make_current" do
+    it "copies this package version to current" do
+      Ploy::S3Storage.any_instance.should_receive(:copy).with(
+        @inst.location,
+        Ploy::Util.remote_name(@inst.deploy_name, @inst.branch, 'current')
+      )
+      @inst.make_current
+    end
+  end
+
   describe "Package.from_metadata" do
     it "returns a list of package objects" do
       meta = {
