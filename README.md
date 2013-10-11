@@ -74,7 +74,8 @@ last_committer: Bob Bobson <bob@example.com>
 
 ## Development
 
-Improvements welcome. Error handling is minimal. Tests are thin in spots.
+Improvements welcome. Error handling is minimal. Tests are thin in spots. Not
+much code documentation (yet).
 
 ### Run Tests
 
@@ -97,4 +98,7 @@ $ gem build ploy.gemspec
 
 Known to work on OSX and Ubuntu.
 
+### Legal
 
+Ploy was created by [Manta Media Inc](http://www.manta.com/), a web company in 
+Columbus, Ohio. It is distributed under the MIT license.
