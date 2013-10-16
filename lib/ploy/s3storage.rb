@@ -1,3 +1,5 @@
+require 'aws-sdk'
+
 module Ploy
   class S3Storage
     def initialize(bucket)

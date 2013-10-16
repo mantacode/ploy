@@ -1,25 +1,34 @@
-require 'ploy/packager'
+require 'ploy/localpackage/debbuilder'
 
-describe Ploy::LocalPackager do
+describe Ploy::LocalPackage::DebBuilder do
   before(:all) do
-    @lpkg = Ploy::LocalPackager.new('spec/resources/ploy-publish.yml')
+    @db = Ploy::LocalPackage::DebBuilder.new(
+      :name          => 'some-project',
+      :sha           => 'fakesha',
+      :branch        => 'fakebranch',
+      :timestamp     => '123456',
+      :upstart_files => ['spec/resources/conf/some-project-initfile'],
+      :dist_dir      => 'spec/resources/dist',
+      :prefix        => '/usr/local/someproject',
+      :prep_cmd      => 'lineman build'
+    );
+
   end
   it "can be initialized" do
-    expect(@lpkg).to be_a(Ploy::LocalPackager)
+    expect(@db).to be_a(Ploy::LocalPackage::DebBuilder)
   end
 
   describe "#build_deb" do
     filename = ""
 
     it "builds a deb file" do
-      path = @lpkg.build_deb
+      path = @db.build_deb
       expect(File.exists? path).to be_true
       filename = path
     end
 
     it "sets a version that looks right" do
-      branch = ENV['TRAVIS_BRANCH'] || `git symbolic-ref --short -q HEAD`.chomp
-      expect(`dpkg-deb -f #{filename} Version`).to match(/\d+\.#{branch}/)
+      expect(`dpkg-deb -f #{filename} Version`.chomp).to eq '123456.fakebranch'
     end
 
     it "makes a deb with a test file at the expected location" do
@@ -35,21 +44,13 @@ describe Ploy::LocalPackager do
     end
 
     it "makes a deb with a git revision field" do
-      expect(`dpkg-deb -f #{filename} gitrev`).to match(/...\n/) # not empty
+      expect(`dpkg-deb -f #{filename} gitrev`.chomp).to eq('fakesha')
     end
 
     after(:all) do
-      system("cp #{filename} test.deb") # temporary
       File.delete(filename)
     end
 
-  end
-
-  describe "#remote_package" do
-    it "returns a Ploy::Package to match the local package" do
-      rem = @lpkg.remote_package
-      expect(rem).to be_a(Ploy::Package)
-    end
   end
 
 end
