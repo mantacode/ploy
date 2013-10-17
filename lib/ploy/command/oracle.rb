@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'json'
 require 'ploy/metasrc'
+require 'ploy/metaoracle'
 
 # TODO: this needs tests. It is a Friday; I just don't have the brainpower
 # left to figure out how to test a subclassed sinatra.
@@ -20,6 +21,13 @@ module Ploy
           200,
           { "Content-type" => "text/json" },
           JSON.dump(@@metasrc.load)
+        ]
+      end
+      get '/meta/:stack' do
+        [
+          200,
+          { "Content-type" => "text/json" },
+          JSON.dump(Ploy::MetaOracle.new(params[:stack]).query)
         ]
       end
     end
