@@ -13,7 +13,7 @@ module Ploy
       end
 
       def builder
-        builder = Ploy::DebBuilder.new(
+        builder = Ploy::LocalPackage::DebBuilder.new(
           :name          => @conf['deploy_name'],
           :sha           => git_revision,
           :branch        => git_branch,
@@ -34,6 +34,20 @@ module Ploy
           git_revision
         )
       end
+
+      private
+      def git_branch
+        return ENV['TRAVIS_BRANCH'] || `git symbolic-ref --short -q HEAD`.chomp
+      end
+
+      def git_revision
+        return `git rev-parse HEAD`.chomp
+      end
+
+      def git_timestamp
+        return `git log -1 --pretty=format:"%ct"`
+      end
+
     end
   end
 end
