@@ -1,6 +1,6 @@
 # ploy
 
-[![Build Status](https://magnum.travis-ci.com/mantacode/ploy.png?token=x2pVeg6qmsxSFb6xKLh7&branch=master)](https://magnum.travis-ci.com/mantacode/ploy)
+[![Build Status](https://travis-ci.org/mantacode/ploy.png?branch=master)](https://travis-ci.org/mantacode/ploy)
 
 Deployment tools.
 
