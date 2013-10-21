@@ -28,6 +28,7 @@ easy.
 $ ploy help [command]
 $ ploy publish [.ploy-publish.yml]
 $ ploy oracle /path/to/metadata.d
+$ ploy client -f conf.yml -d DEPLOYMENT1 -d DEPLOYMENT2
 $ ploy install -b BUCKET -d DEPLOYMENT [-B BRANCH] [-v VERSION]
 $ ploy bless -b BUCKET -d DEPLOYMENT -B BRANCH -v VERSION
 $ ploy bless -b BUCKET -f INFO_FILE
@@ -58,6 +59,21 @@ git_url: git@github.com:org/some-project
 last_committer: Bob Bobson <bob@example.com>
 
 
+```
+
+### client config format
+
+```
+---
+locked: false
+bucket: bucketname
+packages:
+  some-package:
+    branch: master
+    version: current
+  another-package:
+    branch: fix-branch
+    version: current
 ```
 
 ## Intended workflow
