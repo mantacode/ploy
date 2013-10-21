@@ -58,6 +58,10 @@ describe Ploy::S3Storage do
       @storage.copy(from, to) 
     end
   end
+
+  describe "#read" do
+  end
+
   describe "#get" do
     it "downloads a file using aws-sdk" do
       from = "a/b/c"

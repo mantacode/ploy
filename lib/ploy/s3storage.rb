@@ -16,7 +16,11 @@ module Ploy
     def copy(from, to)
       AWS::S3.new.buckets[@bucketname].objects[from].copy_to(to)
     end
-    
+
+    def read(from)
+      AWS::S3.new.buckets[@bucketname].objects[from].read
+    end
+
     def get(from, fileio)
       AWS::S3.new.buckets[@bucketname].objects[from].read do |chunk|
         fileio.write(chunk)

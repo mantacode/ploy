@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'ploy'
-  s.version = '0.0.5'
+  s.version = '0.0.6'
   s.date = '2013-03-10'
   s.summary = 'deployment'
   s.description = 'deployment'
