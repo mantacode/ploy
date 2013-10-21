@@ -18,10 +18,7 @@ module Ploy
           if ps.locked?
             puts "locked. taking no action."
           else
-            puts "tp: #{o[:target_packages]}"
-            puts "ap: #{ps.packages}"
             ips = installable_packages(o[:target_packages], ps.packages)
-            puts "installing #{ips}"
             ips.each do |package|
               if package.check_new_version then
                 package.install
@@ -46,33 +43,18 @@ usage: ploy client OPTS
 Examples:
 
     $ ploy client -f set.yml -d foo -d bar
-    $ ploy client -b bucket -s teststack -d foo -d bar
-    $ ploy client -h host -d foo -d bar
-    $ ploy client -h host -s teststack -d foo -d bar
+    $ ploy client -b bucket -n this/that/set.yml -d foo -d bar
+    $ ploy client -u http://example.com/set.yml -d foo -d bar
 
   All of those examples will try to install the same packages, but use
   different sources for configuration. The first uses a file, the second
-  uses S3, and the final two use a web service.
-
-  The "stack" option is just a name used to group things together. It
-  can map directly to an AWS CloudFormation stack name, but doesn't
-  have to.
+  uses S3, and the third uses a web service.
 
 Summary:
 
   The client command is like an "install" command that uses external
   configuration instead of command-line options. It can use a file,
   or talk to S3 or a web service.
-
-  S3 should be organized like:
-
-    /hub/
-      $stackname/
-        clientconfig.yml
-
-  The webservice should respond to a call like:
-
-    http://$host:9875/clientconfig/$stack
 
 helptext
       end
@@ -88,10 +70,9 @@ helptext
         yr = Ploy::YamlReader.new
         conf = nil
         if o[:bucket] and o[:stack] then
-          conf = yr.from_s3(o[:bucket], "hub/#{o[:stack]}/clientconfig.yml")
+          conf = yr.from_s3(o[:bucket], o[:s3_name])
         elsif o[:hub_host] then
-          stack = o[:stack] || ""
-          conf = yr.from_http("http://#{o[:hub_host]}:9875/clientconfig/#{stack}")
+          conf = yr.from_http(o[:http_url])
         elsif o[:path] then
           conf = yr.from_file(o[:path])
         end
@@ -104,11 +85,11 @@ helptext
           opts.on("-b", "--bucket BUCKET", "use the given S3 bucket") do |bucket|
             o[:bucket] = bucket
           end
-          opts.on("-s", "--stack STACK_NAME", "use the given stack name") do |stack|
-            o[:stack] = stack
+          opts.on("-n", "--s3-name S3_NAME", "use the given resource name") do |name|
+            o[:s3_name] = name
           end
-          opts.on("-H", "--hub HUB_HOST", "read config from a deployment hub") do |host|
-            o[:hub_host] = host
+          opts.on("-u", "--http-url HTTP_URL", "read config from an http URL") do |url|
+            o[:http_url] = url
           end
           opts.on("-f", "--file PATH", "read config from file") do |path|
             o[:path] = path
