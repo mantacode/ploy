@@ -4,8 +4,13 @@ module Ploy
 
     def initialize(conf)
       self.packages = []
-      conf['packages'].each do |k,v|
-        self.packages.push Ploy::Package.new(v['bucket'], v['name'], v['branch'], v['version'])
+      conf['packages'].each do |v|
+        self.packages.push Ploy::Package.new(
+          conf['bucket'] || v['bucket'],
+          v['name'],
+          v['branch'],
+          v['version']
+        )
       end
       @locked = conf['locked']
     end

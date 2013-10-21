@@ -1,4 +1,3 @@
-require 'YAML'
 require 'net/http'
 
 module Ploy
