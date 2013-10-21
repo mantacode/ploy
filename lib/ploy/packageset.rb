@@ -4,10 +4,10 @@ module Ploy
 
     def initialize(conf)
       self.packages = []
-      conf['packages'].each do |v|
+      conf['packages'].each do |k,v|
         self.packages.push Ploy::Package.new(
           conf['bucket'] || v['bucket'],
-          v['name'],
+          k,
           v['branch'],
           v['version']
         )
