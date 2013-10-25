@@ -1,9 +1,9 @@
 Gem::Specification.new do |s|
   s.name = 'ploy'
-  s.version = '0.0.6'
-  s.date = '2013-03-10'
-  s.summary = 'deployment'
-  s.description = 'deployment'
+  s.version = '0.0.7'
+  s.date = '2013-25-10'
+  s.summary = 'Multi-phase deployment tool'
+  s.description = 'Multi-phase deployment tool for use in a continuous deployment environment.'
   s.authors = ["Michael Bruce"]
   s.email = 'mbruce@manta.com'
   s.files += Dir['lib/**/*.rb']
