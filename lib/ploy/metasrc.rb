@@ -5,6 +5,7 @@ module Ploy
     end
     def load
       d = {}
+      return {} unless Dir.exists? @dir
       Dir.foreach(@dir) do |fname|
         if (fname =~ /\.ya?ml$/) then
           y = YAML::load_file(File.join(@dir,fname))

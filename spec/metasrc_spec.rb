@@ -8,5 +8,11 @@ describe Ploy::MetaSrc do
       expect(data['some-project']).to be_a(Hash)
       expect(data['some-project']['name']).to eq('some-project')
     end
+    it "fails gracefully with an invalid directory" do
+      msrc = Ploy::MetaSrc.new("thisisnothere")
+      data = msrc.load
+      expect(data).to be_a(Hash)
+      expect(data.length).to eq(0)
+    end
   end
 end
