@@ -29,4 +29,8 @@ describe Ploy::LocalPackage::DebBuilder do
     end
 
   end
+  context "calculating safe versions" do
+    When(:result) { db.safeversion("one-two_three") }
+    Then { result == 'onetwothree' }
+  end
 end
