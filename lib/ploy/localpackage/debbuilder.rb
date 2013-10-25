@@ -36,7 +36,7 @@ module Ploy
           { "-C" => dir },
           { "--deb-field" => "'gitrev: #{@sha}'" },
           "-f",
-          { "-v" => @timestamp + '.' + @branch },
+          { "-v" => safeversion(@timestamp + '.' + @branch) },
         ]
 
         if @upstart_files then
@@ -46,6 +46,10 @@ module Ploy
         end
 
         return optlist
+      end
+
+      def safeversion(txt)
+        return txt.gsub(/[^A-Za-z0-9\.\+]/, '')
       end
 
       def mirror_dist(dir)
