@@ -71,7 +71,7 @@ helptext
         conf = nil
         if o[:bucket] and o[:stack] then
           conf = yr.from_s3(o[:bucket], o[:s3_name])
-        elsif o[:hub_host] then
+        elsif o[:http_url] then
           conf = yr.from_http(o[:http_url])
         elsif o[:path] then
           conf = yr.from_file(o[:path])
