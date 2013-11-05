@@ -1,5 +1,6 @@
 require 'yaml'
 require 'ploy/localpackage/optlist'
+require 'tempfile'
 
 module Ploy
   module LocalPackage
@@ -22,7 +23,13 @@ module Ploy
         Dir.mktmpdir do |dir|
           mirror_dist(dir)
           write_metadata(dir)
-          info = eval(`fpm #{fpm_optlist(dir).as_string} .`)
+          Tempfile.open(['postinst', 'sh']) do |file|
+            write_after_install_script(file)
+            ol = fpm_optlist(dir)
+            ol.add("--after-install", file.path)
+            puts "debug: fpm #{ol.as_string} ."
+            info = eval(`fpm #{ol.as_string} .`)
+          end
         end
         return info[:path]
       end
@@ -59,6 +66,29 @@ module Ploy
 
       def mirror_dist_target(topdir)
         return @prefix ? File.join(topdir, @prefix) : topdir
+      end
+
+      def write_after_install_script(file)
+        file.write <<SCRIPT
+#!/bin/bash
+
+# this is awful
+check_upstart_service(){
+    status $1 | grep -q "^$1 start" > /dev/null
+    return $?
+}
+SCRIPT
+        @upstart_files.each do | upstart |
+          service = File.basename(upstart)
+          file.write <<SCRIPT
+          if check_upstart_service #{service}; then
+            restart #{service}
+          else
+            start #{service}
+          fi
+SCRIPT
+        end
+        file.flush
       end
 
       def write_metadata(dir)
