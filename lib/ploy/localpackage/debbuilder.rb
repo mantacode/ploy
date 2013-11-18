@@ -61,7 +61,7 @@ module Ploy
 
       def mirror_dist(dir)
         FileUtils.mkpath mirror_dist_target(dir)
-        system("rsync -aC #{@dist_dir}/* #{mirror_dist_target(dir)}")
+        system("rsync -a #{@dist_dir}/* #{mirror_dist_target(dir)}")
       end
 
       def mirror_dist_target(topdir)
