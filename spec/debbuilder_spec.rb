@@ -9,6 +9,7 @@ describe Ploy::LocalPackage::DebBuilder do
       :branch        => 'fakebranch',
       :timestamp     => '123456',
       :upstart_files => ['spec/resources/conf/some-project-initfile'],
+      :dist_dirs     => [{'dir' => 'spec/resources/dist2', 'prefix' => '/etc/dist2'}],
       :dist_dir      => 'spec/resources/dist',
       :prefix        => '/usr/local/someproject',
       :prep_cmd      => 'lineman build'
@@ -19,6 +20,7 @@ describe Ploy::LocalPackage::DebBuilder do
 
     Then { File.exists? filename }
     And  { `dpkg-deb -f #{filename} Version`.chomp == '123456.fakebranch' }
+    And  { `dpkg-deb -c #{filename}` =~ / \.\/etc\/dist2\/dist2.txt\n/ }
     And  { `dpkg-deb -c #{filename}` =~ / \.\/usr\/local\/someproject\/file.txt\n/ }
     And  { `dpkg-deb -c #{filename}` =~ / \.\/etc\/init\/some-project-initfile.conf\n/ }
     And  { `dpkg-deb -c #{filename}` =~ / \.\/etc\/ploy\/metadata.d\/some-project.yml\n/ }

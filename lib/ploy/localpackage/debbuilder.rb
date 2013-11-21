@@ -10,6 +10,7 @@ module Ploy
       attr_accessor :branch
       attr_accessor :timestamp
       attr_accessor :upstart_files
+      attr_accessor :dist_dirs
       attr_accessor :dist_dir
       attr_accessor :prefix
 
@@ -21,6 +22,7 @@ module Ploy
       def build_deb
         info = nil
         Dir.mktmpdir do |dir|
+          mirror_dists(dir, @dist_dirs)
           mirror_dist(dir, @prefix, @dist_dir)
           write_metadata(dir)
           Tempfile.open(['postinst', 'sh']) do |file|
@@ -57,6 +59,12 @@ module Ploy
 
       def safeversion(txt)
         return txt.gsub(/[^A-Za-z0-9\.\+]/, '')
+      end
+
+      def mirror_dists(topdir, dist_dirs)
+        dist_dirs.each do |source|
+          mirror_dist(topdir, source['prefix'], source['dir'])
+        end
       end
 
       def mirror_dist(topdir, prefix, source_dir)
