@@ -10,8 +10,8 @@ module Ploy
       attr_accessor :branch
       attr_accessor :timestamp
       attr_accessor :upstart_files
-      attr_accessor :dist_dir
       attr_accessor :dist_dirs
+      attr_accessor :dist_dir
       attr_accessor :prefix
 
       def initialize(opts = {})
