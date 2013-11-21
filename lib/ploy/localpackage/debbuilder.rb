@@ -10,6 +10,7 @@ module Ploy
       attr_accessor :branch
       attr_accessor :timestamp
       attr_accessor :upstart_files
+      attr_accessor :dist_dirs
       attr_accessor :dist_dir
       attr_accessor :prefix
 
@@ -21,7 +22,12 @@ module Ploy
       def build_deb
         info = nil
         Dir.mktmpdir do |dir|
-          mirror_dist(dir)
+          dist_dirs = Array.new(@dist_dirs || [])
+          if @dist_dir
+            dist_dirs.unshift({'dir' => @dist_dir, 'prefix' => @prefix})
+          end
+          mirror_dists(dir, dist_dirs)
+          #mirror_dist(dir, @prefix, @dist_dir)
           write_metadata(dir)
           Tempfile.open(['postinst', 'sh']) do |file|
             write_after_install_script(file)
@@ -59,13 +65,19 @@ module Ploy
         return txt.gsub(/[^A-Za-z0-9\.\+]/, '')
       end
 
-      def mirror_dist(dir)
-        FileUtils.mkpath mirror_dist_target(dir)
-        system("rsync -a #{@dist_dir}/* #{mirror_dist_target(dir)}")
+      def mirror_dists(topdir, dist_dirs)
+        dist_dirs.each do |source|
+          mirror_dist(topdir, source['prefix'], source['dir'])
+        end
       end
 
-      def mirror_dist_target(topdir)
-        return @prefix ? File.join(topdir, @prefix) : topdir
+      def mirror_dist(topdir, prefix, source_dir)
+        FileUtils.mkpath mirror_dist_target(topdir, prefix)
+        system("rsync -a #{source_dir}/* #{mirror_dist_target(topdir, prefix)}")
+      end
+
+      def mirror_dist_target(topdir, prefix)
+        return prefix ? File.join(topdir, prefix) : topdir
       end
 
       def write_after_install_script(file)

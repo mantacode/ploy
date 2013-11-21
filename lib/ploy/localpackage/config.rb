@@ -19,6 +19,7 @@ module Ploy
           :branch        => git_branch,
           :timestamp     => git_timestamp,
           :upstart_files => @conf['upstart_files'],
+          :dist_dirs     => @conf['dist_dirs'],
           :dist_dir      => @conf['dist_dir'],
           :prefix        => @conf['prefix'],
           :prep_cmd      => @conf['prep_cmd']
