@@ -21,7 +21,7 @@ module Ploy
       def build_deb
         info = nil
         Dir.mktmpdir do |dir|
-          mirror_dist(dir)
+          mirror_dist(dir, @prefix, @dist_dir)
           write_metadata(dir)
           Tempfile.open(['postinst', 'sh']) do |file|
             write_after_install_script(file)
@@ -59,9 +59,9 @@ module Ploy
         return txt.gsub(/[^A-Za-z0-9\.\+]/, '')
       end
 
-      def mirror_dist(dir)
-        FileUtils.mkpath mirror_dist_target(dir, @prefix)
-        system("rsync -a #{@dist_dir}/* #{mirror_dist_target(dir, @prefix)}")
+      def mirror_dist(topdir, prefix, source_dir)
+        FileUtils.mkpath mirror_dist_target(topdir, prefix)
+        system("rsync -a #{source_dir}/* #{mirror_dist_target(topdir, prefix)}")
       end
 
       def mirror_dist_target(topdir, prefix)
