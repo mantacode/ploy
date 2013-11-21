@@ -22,11 +22,11 @@ module Ploy
       def build_deb
         info = nil
         Dir.mktmpdir do |dir|
-          dist_dirs = @dist_dirs || []
+          dist_dirs = Array.new(@dist_dirs || [])
           if @dist_dir
             dist_dirs.unshift({'dir' => @dist_dir, 'prefix' => @prefix})
           end
-          mirror_dists(dir, @dist_dirs)
+          mirror_dists(dir, dist_dirs)
           #mirror_dist(dir, @prefix, @dist_dir)
           write_metadata(dir)
           Tempfile.open(['postinst', 'sh']) do |file|
