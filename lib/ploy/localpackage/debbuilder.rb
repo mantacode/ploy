@@ -60,12 +60,12 @@ module Ploy
       end
 
       def mirror_dist(dir)
-        FileUtils.mkpath mirror_dist_target(dir)
-        system("rsync -a #{@dist_dir}/* #{mirror_dist_target(dir)}")
+        FileUtils.mkpath mirror_dist_target(dir, @prefix)
+        system("rsync -a #{@dist_dir}/* #{mirror_dist_target(dir, @prefix)}")
       end
 
-      def mirror_dist_target(topdir)
-        return @prefix ? File.join(topdir, @prefix) : topdir
+      def mirror_dist_target(topdir, prefix)
+        return prefix ? File.join(topdir, prefix) : topdir
       end
 
       def write_after_install_script(file)
