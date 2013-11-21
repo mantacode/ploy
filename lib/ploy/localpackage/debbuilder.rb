@@ -82,10 +82,9 @@ SCRIPT
           service = File.basename(upstart)
           file.write <<SCRIPT
           if check_upstart_service #{service}; then
-            restart #{service}
-          else
-            start #{service}
+            stop #{service}
           fi
+          start #{service}
 SCRIPT
         end
         file.flush
