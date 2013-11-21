@@ -1,6 +1,20 @@
 require 'rspec/given'
 require 'ploy/localpackage/debbuilder'
 
+shared_examples "basic deb" do
+  Then { File.exists? filename }
+  And  { `dpkg-deb -f #{filename} Version`.chomp == '123456.fakebranch' }
+  And  { `dpkg-deb -c #{filename}` =~ / \.\/etc\/dist2\/dist2.txt\n/ }
+  And  { `dpkg-deb -c #{filename}` =~ / \.\/usr\/local\/someproject\/file.txt\n/ }
+  And  { `dpkg-deb -c #{filename}` =~ / \.\/etc\/init\/some-project-initfile.conf\n/ }
+  And  { `dpkg-deb -c #{filename}` =~ / \.\/etc\/ploy\/metadata.d\/some-project.yml\n/ }
+  And  { `dpkg-deb -f #{filename} gitrev`.chomp == 'fakesha' }
+
+  after(:all) do
+    File.delete(filename)
+  end
+end
+
 describe Ploy::LocalPackage::DebBuilder do
   Given(:db) do
     Ploy::LocalPackage::DebBuilder.new(
@@ -17,20 +31,9 @@ describe Ploy::LocalPackage::DebBuilder do
   end
   context "building a deb file" do
     When(:filename) { db.build_deb }
-
-    Then { File.exists? filename }
-    And  { `dpkg-deb -f #{filename} Version`.chomp == '123456.fakebranch' }
-    And  { `dpkg-deb -c #{filename}` =~ / \.\/etc\/dist2\/dist2.txt\n/ }
-    And  { `dpkg-deb -c #{filename}` =~ / \.\/usr\/local\/someproject\/file.txt\n/ }
-    And  { `dpkg-deb -c #{filename}` =~ / \.\/etc\/init\/some-project-initfile.conf\n/ }
-    And  { `dpkg-deb -c #{filename}` =~ / \.\/etc\/ploy\/metadata.d\/some-project.yml\n/ }
-    And  { `dpkg-deb -f #{filename} gitrev`.chomp == 'fakesha' }
-
-    after(:all) do
-      File.delete(filename)
-    end
-
+    it_behaves_like "basic deb"
   end
+
   context "calculating safe versions" do
     When(:result) { db.safeversion("one-two_three") }
     Then { result == 'onetwothree' }
