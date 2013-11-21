@@ -42,7 +42,9 @@ The 'help' command actually works, so you should definitely use that.
 ---
 bucket: bucketname
 deploy_name: some-project
-dist_dir: dist
+dist_dirs:
+  - dir: dist
+    prefix: /usr/local/someproject
 prep_cmd: lineman build
 upstart_files:
  - conf/some-project-initfile
