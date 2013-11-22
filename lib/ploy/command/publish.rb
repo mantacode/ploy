@@ -5,11 +5,20 @@ module Ploy
   module Command
     class Publish < Base
       def run(argv)
-        res = Ploy::Publisher.new(argv.shift || '.ploy-publisher.yml').publish
-        puts "ploy publish (#{res.deploy_name} #{res.branch} #{res.version}) ok"
-        puts "debug: git rev-parse: #{`git rev-parse HEAD`.chomp}"
-        puts "debug: git symbolic-ref: #{`git symbolic-ref --short -q HEAD`.chomp}"
-        return true
+        if not is_pull_request_build then
+          res = Ploy::Publisher.new(argv.shift || '.ploy-publisher.yml').publish
+          puts "ploy publish (#{res.deploy_name} #{res.branch} #{res.version}) ok"
+          puts "debug: git rev-parse: #{`git rev-parse HEAD`.chomp}"
+          puts "debug: git symbolic-ref: #{`git symbolic-ref --short -q HEAD`.chomp}"
+          return true
+        else
+          puts "skipping publish; this is a PR build"
+        end
+      end
+
+      def is_pull_request_build()
+        prenv = ENV['TRAVIS_PULL_REQUEST']
+        return prenv && (prenv != 'false')
       end
 
       def help
