@@ -7,13 +7,15 @@ module Ploy
       def run(argv)
         if not is_pull_request_build then
           res = Ploy::Publisher.new(argv.shift || '.ploy-publisher.yml').publish
-          puts "ploy publish (#{res.deploy_name} #{res.branch} #{res.version}) ok"
+          if res then
+            puts "ploy publish (#{res.deploy_name} #{res.branch} #{res.version}) ok"
+          end
           puts "debug: git rev-parse: #{`git rev-parse HEAD`.chomp}"
           puts "debug: git symbolic-ref: #{`git symbolic-ref --short -q HEAD`.chomp}"
-          return true
         else
           puts "skipping publish; this is a PR build"
         end
+        return true
       end
 
       def is_pull_request_build()
