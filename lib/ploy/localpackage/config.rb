@@ -42,7 +42,7 @@ module Ploy
       end
 
       def git_revision
-        return `git rev-parse HEAD`.chomp
+        return ENV['TRAVIS_COMMIT'] || `git rev-parse HEAD`.chomp
       end
 
       def git_timestamp

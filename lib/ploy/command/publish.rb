@@ -5,8 +5,10 @@ module Ploy
   module Command
     class Publish < Base
       def run(argv)
-        Ploy::Publisher.new(argv.shift || '.ploy-publisher.yml').publish
-        puts "ploy publish ok"
+        res = Ploy::Publisher.new(argv.shift || '.ploy-publisher.yml').publish
+        puts "ploy publish (#{res.deploy_name} #{res.branch} #{res.version}) ok"
+        puts "debug: git rev-parse: #{`git rev-parse HEAD`.chomp}"
+        puts "debug: git symbolic-ref: #{`git symbolic-ref --short -q HEAD`.chomp}"
         return true
       end
 
