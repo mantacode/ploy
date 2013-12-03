@@ -22,7 +22,8 @@ module Ploy
           :dist_dirs     => @conf['dist_dirs'],
           :dist_dir      => @conf['dist_dir'],
           :prefix        => @conf['prefix'],
-          :prep_cmd      => @conf['prep_cmd']
+          :prep_cmd      => @conf['prep_cmd'],
+          :postinst      => @conf['postinst']
         );
         return builder
       end
