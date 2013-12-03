@@ -13,6 +13,7 @@ module Ploy
       attr_accessor :dist_dirs
       attr_accessor :dist_dir
       attr_accessor :prefix
+      attr_accessor :postinst
 
       def initialize(opts = {})
         @metadata_dir = "/etc/ploy/metadata.d"
@@ -83,6 +84,8 @@ module Ploy
       def write_after_install_script(file)
         file.write <<SCRIPT
 #!/bin/bash
+
+#{postinst}
 
 # this is awful
 check_upstart_service(){
