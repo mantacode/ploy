@@ -84,23 +84,28 @@ module Ploy
       def write_after_install_script(file)
         file.write <<SCRIPT
 #!/bin/bash
-
+# BEGIN PACKAGE POSTINST
 #{postinst}
+# END PACKAGE POSTINST
+SCRIPT
 
+        if @upstart_files then
+          @upstart_files.each do | upstart |
+            service = File.basename(upstart)
+            file.write <<SCRIPT
+# Everything below added by ploy automatically...
 # this is awful
 check_upstart_service(){
-    status $1 | grep -q "^$1 start" > /dev/null
-    return $?
+  status $1 | grep -q "^$1 start" > /dev/null
+  return $?
 }
+
+if check_upstart_service #{service}; then
+  stop #{service}
+fi
+start #{service}
 SCRIPT
-        @upstart_files.each do | upstart |
-          service = File.basename(upstart)
-          file.write <<SCRIPT
-          if check_upstart_service #{service}; then
-            stop #{service}
-          fi
-          start #{service}
-SCRIPT
+          end
         end
         file.flush
       end

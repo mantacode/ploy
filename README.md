@@ -48,6 +48,10 @@ dist_dirs:
 prep_cmd: lineman build
 upstart_files:
  - conf/some-project-initfile
+postinst: |
+  # This script will be in /var/lib/dpkg/info/${PACKAGE_NAME}.postinst
+  # once the package is installed. Ploy adds #!/bin/bash to the top
+  # automatically.
 ```
 
 ### metadata files
