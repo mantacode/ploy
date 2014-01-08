@@ -10,9 +10,10 @@ module Ploy
           :version => 'current',
           :branch  => 'master',
           :check   => true,
+          :variant => nil
         }
         optparser(o).parse!(argv)
-        pkg = Ploy::Package.new(o[:bucket], o[:deploy], o[:branch], o[:version])
+        pkg = Ploy::Package.new(o[:bucket], o[:deploy], o[:branch], o[:version], o[:variant])
         if (!o[:check] || pkg.check_new_version)
           pkg.install()
           puts "installed #{o[:deploy]}"
@@ -24,7 +25,7 @@ module Ploy
 
       def help
         return <<helptext
-usage: ploy install -b $bucket -d $deployment -B $branch -v $version
+usage: ploy install -b $bucket -d $deployment -B $branch -v $version [-r $variant]
 
 #{optparser}
 
@@ -58,6 +59,9 @@ helptext
           end
           opts.on("-v", "--version VERSION", "use the given version") do |v|
             o[:version] = v
+          end
+          opts.on("-r", "--variant VARIANT", "use the given vaRiant (e.g. 'blessed')") do |v|
+            o[:variant] = v
           end
         end
         return options
