@@ -6,11 +6,14 @@ module Ploy
     attr_accessor :deploy_name
     attr_accessor :branch
     attr_accessor :version
+    attr_accessor :variant
 
-    def initialize(bucket, deploy, branch, version)
+    def initialize(bucket, deploy, branch, version, variant = nil)
+      @bucket = bucket
       @deploy_name = deploy
       @branch = branch
       @version = version
+      @variant = variant
 
       @store = Ploy::S3Storage.new(bucket)
     end
@@ -28,18 +31,24 @@ module Ploy
       end
     end
 
+    def blessed
+      return Ploy::Package.new(@bucket, @deploy_name, @branch, @version, "blessed")
+    end
+
     def bless
+      b = self.blessed
       @store.copy(
         location,
-        Ploy::Util.remote_name(@deploy_name, @branch, @version, true)
+        b.location
       )
+      return b
     end
 
     def location
-      return Ploy::Util.remote_name(@deploy_name, @branch, @version)
+      return Ploy::Util.remote_name(@deploy_name, @branch, @version, @variant)
     end
     def location_current
-      return Ploy::Util.remote_name(@deploy_name, @branch, 'current')
+      return Ploy::Util.remote_name(@deploy_name, @branch, 'current', @variant)
     end
 
     def upload(path)
@@ -53,7 +62,7 @@ module Ploy
     def self.from_metadata(bucket, meta)
       out = []
       meta.each do |k,v|
-        out.push(self.new(bucket, v['name'], v['branch'], v['sha']))
+        out.push(self.new(bucket, v['name'], v['branch'], v['sha'], v['variant']))
       end
       return out
     end

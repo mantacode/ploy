@@ -5,11 +5,15 @@ module Ploy
     def initialize(conf)
       self.packages = []
       conf['packages'].each do |k,v|
+        if (not v)
+          v = {}
+        end
         self.packages.push Ploy::Package.new(
           conf['bucket'] || v['bucket'],
           k,
-          v['branch'],
-          v['version']
+          v['branch'] || conf['branch'],
+          v['version'] || conf['version'],
+          v['variant'] || conf['variant'] || nil
         )
       end
       @locked = conf['locked']

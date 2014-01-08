@@ -34,7 +34,7 @@ module Ploy
             write_after_install_script(file)
             ol = fpm_optlist(dir)
             ol.add("--after-install", file.path)
-            puts "debug: fpm #{ol.as_string} ."
+            #puts "debug: fpm #{ol.as_string} ."
             info = eval(`fpm #{ol.as_string} .`)
           end
         end

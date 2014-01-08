@@ -39,7 +39,7 @@ describe Ploy::Package do
     it "copies to a blessed location" do
       Ploy::S3Storage.any_instance.should_receive(:copy).with(
         Ploy::Util.remote_name("some-project", "master", "current"),
-        Ploy::Util.remote_name("some-project", "master", "current", true)
+        Ploy::Util.remote_name("some-project", "master", "current", "blessed")
       )
       @inst.bless
     end
