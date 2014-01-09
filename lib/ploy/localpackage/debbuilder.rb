@@ -53,7 +53,7 @@ module Ploy
           { "-v" => safeversion(@timestamp + '.' + @branch) },
         ]
 
-        if @upstart_files then
+        if !@upstart_files.nil? && !@upstart_files.empty?
           @upstart_files.each do | upstart |
             optlist.add("--deb-upstart", upstart)
           end
