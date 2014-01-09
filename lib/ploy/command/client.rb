@@ -32,6 +32,8 @@ module Ploy
           puts "error reading conf"
           help()
         end
+      else
+        puts "no deployconfig available, so no installs attempted"
       end
 
       def help
