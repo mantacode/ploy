@@ -11,7 +11,7 @@ module Ploy
             puts "ploy publish (#{res.deploy_name} #{res.branch} #{res.version}) ok"
           end
           puts "debug: git rev-parse: #{`git rev-parse HEAD`.chomp}"
-          puts "debug: git symbolic-ref: #{`git symbolic-ref --short -q HEAD`.chomp}"
+          puts "debug: git symbolic-ref: #{`git symbolic-ref -q HEAD |sed -e 's/.*\\///'`.chomp}"
         else
           puts "skipping publish; this is a PR build"
         end
