@@ -19,9 +19,15 @@ module Ploy
     end
 
     def check_new_version
-      installed = `dpkg-query -W -f '${gitrev}' #{@deploy_name}`.chomp
-      remote_v = @store.metadata(location)['git_revision']
-      return (installed != remote_v)
+      return (installed_version != remote_version)
+    end
+
+    def installed_version
+      return `dpkg-query -W -f '${gitrev}' #{@deploy_name}`.chomp
+    end
+
+    def remote_version
+      return @store.metadata(location)['git_revision']
     end
 
     def install
