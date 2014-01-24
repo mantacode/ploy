@@ -2,9 +2,15 @@ require 'ploy/localpackage/config'
 
 module Ploy
   class Publisher
+
+    # initializes a new instance given the conf_source
+
     def initialize(conf_source)
       @config = Ploy::LocalPackage::Config.new conf_source
     end
+
+    # publishes the local package to the remote destination
+    # and returns the remote package
 
     def publish
       pkgpath = @config.builder.build_deb
