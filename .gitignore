@@ -1,3 +1,6 @@
 *.gem
 *.deb
 quick.sh
+*.swp
+.bundle/
+vendor/
