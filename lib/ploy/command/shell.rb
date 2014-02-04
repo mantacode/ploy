@@ -14,12 +14,11 @@ module Ploy
       end
 
       # runs the system command and returns the output of it
+      # argv should be a hash
 
-      def run (argv)
+      def run (argv={})
 
-        # Id like to have the option of passing the stdin data.  so we can
-        # chain these commands together
-        data, err, status = Open3.capture3(info(), :stdin_data=>'') 
+        data, err, status = Open3.capture3(info(), argv) 
         print status
         return data.chomp
 
