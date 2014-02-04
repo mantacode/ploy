@@ -35,6 +35,9 @@ $> echo "Hello, World"
 
 Will be executed and the output of the program will be returned
 
+You can also pass in options to the #run method which will be options
+to the Open3 capture3 method
+
 helptext
       end
 
