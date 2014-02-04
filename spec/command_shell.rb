@@ -3,12 +3,12 @@ require 'ploy/command/shell'
 describe Ploy::Command::Shell do
   describe '#info' do 
     it 'will return the command string that will be executed' do
-      expect(Ploy::Command::Shell.new.info).toBe 'echo "Needs Implemented"' #meh as well
+      expect(Ploy::Command::Shell.new.info).to eq('echo "default command"') #meh as well
     end
   end
   describe '#run' do
     it 'will run the shell command and return the result' do
-      expect(Ploy::Command::Shell.new.run([])).toBe 'Needs Implemented'
+      expect(Ploy::Command::Shell.new.run([])).to eq('default command')
     end
   end
   describe "#help" do
