@@ -39,7 +39,7 @@ module Ploy
 
       private
       def git_branch
-        return ENV['TRAVIS_BRANCH'] || `git symbolic-ref --short -q HEAD`.chomp
+        return ENV['TRAVIS_BRANCH'] || `git symbolic-ref -q HEAD |sed -e 's/.*\\///'`.chomp
       end
 
       def git_revision
