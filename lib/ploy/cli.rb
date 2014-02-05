@@ -1,4 +1,5 @@
 require 'ploy/command'
+require 'ploy/command/hooks'
 
 module Ploy
 
@@ -8,7 +9,10 @@ module Ploy
 
   class Cli
     def run(argv)
-      subcommand = argv.shift || 'help'
+      name = argv.shift || 'help'
+      scripts = File.basename(Dir.getwd) + '/events.d'
+      puts 'the scripts: ' + scripts
+      Ploy::Command.lookup(name).next(Ploy::Command::Hooks.new(scripts)).execute(argv);
       Ploy::Command.lookup(subcommand).run(argv)
     end
   end
