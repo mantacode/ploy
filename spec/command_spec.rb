@@ -35,14 +35,24 @@ describe Ploy::Command do
         expect(Ploy::Command::Base.new.next(Ploy::Command::Base.new).next).to be_a(Ploy::Command::Base)
       end
     end
-    describe '#execute :argv' do
+    describe '#execute' do
+      it 'should return the result of the run command' do
+        expect(Ploy::Command::Base.new.execute()).to be_false
+      end
+    end
+    describe '#execute :argv=[]' do
       it 'should return the result of the run command' do
         expect(Ploy::Command::Base.new.execute([])).to be_false
       end
     end
+    describe '#execute :argv=[] :input=""' do
+      it 'should return the result of the run command' do
+        expect(Ploy::Command::Base.new.execute([], '')).to be_false
+      end
+    end
     describe '#execute (when there is a next action)' do
       it 'should call the next method too and return that result' do
-        expect(Ploy::Command::Base.new.next(Ploy::Command::Base.new).execute([])).to be_false
+        expect(Ploy::Command::Base.new.next(Ploy::Command::Base.new).execute()).to be_false
       end
     end
   end
