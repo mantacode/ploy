@@ -14,7 +14,7 @@ module Ploy
     def put(path, name, meta = {})
       AWS::S3.new.buckets[@bucketname].objects[name].write(
         Pathname.new(path),
-        { :metadata => meta },
+        { :metadata => meta }
       )
     end
 
