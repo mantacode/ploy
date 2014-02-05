@@ -13,7 +13,7 @@ describe Ploy::Command::Shell do
   end
   describe '#run :stdin_data' do
     it 'will run the shell command using the data from stdin' do
-      expect(Ploy::Command::Shell.new('cat').run(:stdin_data=>'Hello, World!')).to eq('Hello, World!')
+      expect(Ploy::Command::Shell.new('cat').run([], 'Hello, World!')).to eq('Hello, World!')
     end
   end
   describe "#help" do

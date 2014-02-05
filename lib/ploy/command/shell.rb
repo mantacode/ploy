@@ -14,11 +14,13 @@ module Ploy
       end
 
       # runs the system command and returns the output of it
-      # argv should be a hash
 
-      def run (argv={})
-
-        data, err, status = Open3.capture3(info(), argv) 
+      def run (argv=[], input='')
+        i = info()
+        if argv.is_a?(Array) && argv.size > 0
+          i += ' ' + argv.join(' ')
+        end
+        data, err, status = Open3.capture3(i, {stdin_data: input}) 
         print status
         return data.chomp
 
@@ -34,9 +36,6 @@ The command string such as this
 $> echo "Hello, World"
 
 Will be executed and the output of the program will be returned
-
-You can also pass in options to the #run method which will be options
-to the Open3 capture3 method
 
 helptext
       end
