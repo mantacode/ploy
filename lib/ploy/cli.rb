@@ -10,7 +10,11 @@ module Ploy
   class Cli
     def run(argv)
       name = argv.shift || 'help'
-      scripts = File.basename(Dir.getwd) + '/events.d/' + name
+      # TODO we could also check maybe /etc/ploy/events.d too 
+      scripts = [
+        File.basename(Dir.getwd) + '/events.d/' + name,
+        '/etc/ploy/events.d/' + name
+      ]
       Ploy::Command.lookup(name).next(Ploy::Command::Hooks.new(scripts)).execute(argv);
     end
   end

@@ -5,24 +5,26 @@ module Ploy
   module Command
     class Hooks < Base
 
-      def initialize (path='/etc/ploy/events.d')
-        @path = path
+      def initialize (paths=['/etc/ploy/events.d'])
+        @paths = paths
       end
 
-      def path 
-        return @path
+      def paths 
+        return @paths
       end
 
       # runs the system command and returns the output of it
 
       def run (argv=[], input='')
         output = []
-        Dir.foreach(path) do |item|
-          next if item == '.' or item == '..'
-          name = path + "/" + item
-          if File.executable?(name)
-            out = Shell.new(name).execute([], input)
-            output.push(name + "\n" + out);
+        paths.each do |path|
+          Dir.foreach(path) do |item|
+            next if item == '.' or item == '..'
+            name = path + "/" + item
+            if File.executable?(name)
+              out = Shell.new(name).execute([], input)
+              output.push(name + "\n" + out);
+            end
           end
         end
         return output.join("\n")
