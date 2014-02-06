@@ -16,7 +16,16 @@ module Ploy
       # runs the system command and returns the output of it
 
       def run (argv=[], input='')
-        return 'Needs implemented!'
+        output = []
+        Dir.foreach(path) do |item|
+          next if item == '.' or item == '..'
+          name = path + "/" + item
+          if File.executable?(name)
+            out = Shell.new(name).execute([], input)
+            output.push(name + "\n" + out);
+          end
+        end
+        return output.join("\n")
       end
 
       # the help information
