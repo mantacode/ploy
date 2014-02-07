@@ -5,6 +5,9 @@ require 'json'
 module Ploy
   module Command
     class Bless < Base
+
+      # execute the bless command
+      
       def run(argv)
         o = {}
         optparser(o).parse!(argv)
@@ -21,6 +24,8 @@ module Ploy
           puts "blessed #{o[:deploy]}/#{o[:branch]} at #{o[:version]}"
         end
       end
+
+      # the help 
 
       def help
         return <<helptext
@@ -42,6 +47,9 @@ helptext
       end
 
       private
+
+      # parse the options
+
       def optparser(o = {})
         options = OptionParser.new do |opts|
           opts.banner = ''
