@@ -5,12 +5,10 @@ module Ploy
   module Command
     class Shell < Base
 
+      attr_accessor :info
+
       def initialize (info='echo "default command"')
         @info = info
-      end
-
-      def info 
-        return @info
       end
 
       # runs the system command and returns the output of it
