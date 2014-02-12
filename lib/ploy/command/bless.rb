@@ -44,8 +44,6 @@ helptext
 
       private
 
-      # parse the options
-
       def optparser(o = {})
         options = OptionParser.new do |opts|
           opts.banner = ''
