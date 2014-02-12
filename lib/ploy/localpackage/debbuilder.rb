@@ -15,14 +15,10 @@ module Ploy
       attr_accessor :prefix
       attr_accessor :postinst
 
-      # set the properties from our passed options
-
       def initialize(opts = {})
         @metadata_dir = "/etc/ploy/metadata.d"
         opts.each { |k,v| instance_variable_set("@#{k}", v) } # maybe?
       end
-
-      # build teh deb pacakge
 
       def build_deb
         info = nil
@@ -45,8 +41,6 @@ module Ploy
         return info[:path]
       end
 
-      # set up our options
-
       def fpm_optlist(dir)
         optlist = Ploy::LocalPackage::DebBuilderOptlist.new [
           { "-n" => @name },
@@ -68,13 +62,9 @@ module Ploy
         return optlist
       end
 
-      # clean up the version
-
       def safeversion(txt)
         return txt.gsub(/[^A-Za-z0-9\.\+]/, '')
       end
-
-      # mirror the dists from the topdir to the dist_dirs
 
       def mirror_dists(topdir, dist_dirs)
         dist_dirs.each do |source|
@@ -82,21 +72,15 @@ module Ploy
         end
       end
 
-      # mirror the topdir to the source_dir
-
       def mirror_dist(topdir, prefix, source_dir)
         FileUtils.mkpath mirror_dist_target(topdir, prefix)
         system("rsync -a #{source_dir}/* #{mirror_dist_target(topdir, prefix)}")
       end
 
-      # mirror the topdir and prefix
-
       def mirror_dist_target(topdir, prefix)
         return prefix ? File.join(topdir, prefix) : topdir
       end
 
-      # produce an install script
-      
       def write_after_install_script(file)
         file.write <<SCRIPT
 #!/bin/bash
@@ -126,8 +110,6 @@ SCRIPT
         file.flush
       end
 
-      # write the metadata to the dirctory
-      
       def write_metadata(dir)
         base = File.join(dir, @metadata_dir)
         FileUtils.mkpath(base)
