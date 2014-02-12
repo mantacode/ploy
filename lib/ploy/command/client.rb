@@ -7,8 +7,6 @@ module Ploy
   module Command
     class Client < Base
 
-      # run the client command
-
       def run(argv)
         o = {
           :target_packages => []
