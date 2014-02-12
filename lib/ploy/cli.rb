@@ -2,9 +2,6 @@ require 'ploy/command'
 require 'ploy/command/hooks'
 
 module Ploy
-
-  # This is the command line interface.  The default command is "help"
-
   class Cli
     def run(argv)
       name = argv.shift || 'help'
