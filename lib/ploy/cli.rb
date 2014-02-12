@@ -3,8 +3,6 @@ require 'ploy/command/hooks'
 
 module Ploy
 
-  # Cli
-  #
   # This is the command line interface.  The default command is "help"
 
   class Cli
