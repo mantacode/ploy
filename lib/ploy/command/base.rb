@@ -1,8 +1,6 @@
 module Ploy
   module Command
 
-    # A base class for commands
-
     class Base
 
       # sets/gets the argv 
