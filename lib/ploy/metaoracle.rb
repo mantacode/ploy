@@ -2,12 +2,7 @@ require 'net/http'
 require 'json'
 
 module Ploy
-
-  # The point of Meta access
-
   class MetaOracle
-
-    # Initailize a new instace given the stack
 
     def initialize(stack)
       @stack = stack
@@ -26,16 +21,9 @@ module Ploy
       return r
     end
 
-    # Gets the meta data for the instance
-    #
-    # Makes an HTTP request to a URI produced by #oracle_uri and parses
-    # the JSON result.
-
     def meta(instance)
       JSON.parse(Net::HTTP.get(oracle_uri(instance)))
     end
-
-    # Builds up a URI for the instance
 
     def oracle_uri(instance)
         URI("http://#{instance.private_ip_address}:9876/")
