@@ -3,7 +3,6 @@ require 'ploy/localpackage/debbuilder'
 module Ploy
   module LocalPackage
     class Config
-
       def initialize(conf_source = '.ploy-publisher.yml')
         @conf = conf_source
         if (/^---/ =~ conf_source) then
