@@ -1,6 +1,5 @@
 module Ploy
   module Command
-
     class Base
 
       # sets/gets the argv 
@@ -31,20 +30,14 @@ module Ploy
         end
       end
 
-      # run with these arguments
-
       def run(argv=[], input='')
         return false
       end
-
-      # get the command help
 
       def help
         return ""
       end
 
-      # the next command
-      
       def next (command=nil)
         if command.is_a?(Base)
           @next = command
