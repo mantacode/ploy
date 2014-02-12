@@ -2,7 +2,6 @@ require 'net/http'
 
 module Ploy
   class YamlReader
-
     def from_file(path)
       YAML.load(File.read(path))
     end
