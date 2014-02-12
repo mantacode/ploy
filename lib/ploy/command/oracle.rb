@@ -34,8 +34,6 @@ module Ploy
 
     class Oracle < Base
 
-      # run the command
-
       def run(argv)
         OracleServer.oracle_run Ploy::MetaSrc.new(argv.shift || '/etc/ploy/metadata.d')
       end
