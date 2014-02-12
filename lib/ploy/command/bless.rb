@@ -6,8 +6,6 @@ module Ploy
   module Command
     class Bless < Base
 
-      # execute the bless command
-      
       def run(argv)
         o = {}
         optparser(o).parse!(argv)
@@ -24,8 +22,6 @@ module Ploy
           puts "blessed #{o[:deploy]}/#{o[:branch]} at #{o[:version]}"
         end
       end
-
-      # the help 
 
       def help
         return <<helptext
