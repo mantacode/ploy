@@ -7,9 +7,6 @@ require 'ploy/command/client'
 require 'ploy/command/build'
 
 module Ploy
-
-  # This Module provides and interface for retreiving Command objects
-
   module Command
     def self.lookup(topic)
       lookup = {
