@@ -4,7 +4,6 @@ module Ploy
   module LocalPackage
     class Config
 
-      # create a local package using the ploy-publisher yaml as default
       def initialize(conf_source = '.ploy-publisher.yml')
         @conf = conf_source
         if (/^---/ =~ conf_source) then
@@ -13,8 +12,6 @@ module Ploy
           @conf = YAML::load_file(conf_source)
         end
       end
-
-      # create a new Deb package builder
 
       def builder
         builder = Ploy::LocalPackage::DebBuilder.new(
@@ -32,8 +29,6 @@ module Ploy
         return builder
       end
 
-      # creates a new package that will be the "remote" package
-
       def remote_package
         return Ploy::Package.new(
           @conf['bucket'],
@@ -45,19 +40,13 @@ module Ploy
 
       private
 
-      # get the branch
-
       def git_branch
         return ENV['TRAVIS_BRANCH'] || `git symbolic-ref -q HEAD |sed -e 's/.*\\///'`.chomp
       end
 
-      # get the revision
-
       def git_revision
         return ENV['TRAVIS_COMMIT'] || `git rev-parse HEAD`.chomp
       end
-
-      # get the timestamp
 
       def git_timestamp
         return `git log -1 --pretty=format:"%ct"`
