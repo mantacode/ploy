@@ -1,8 +1,10 @@
 module Ploy
   class MetaSrc
+
     def initialize(dir)
       @dir = dir
     end
+
     def load
       d = {}
       return {} unless Dir.exists? @dir

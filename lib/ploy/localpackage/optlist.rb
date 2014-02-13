@@ -2,6 +2,7 @@ module Ploy
   module LocalPackage
     class DebBuilderOptlist
       @list = []
+
       def initialize(list = [])
         @list = list
       end

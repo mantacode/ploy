@@ -3,9 +3,11 @@ require 'ploy/command/base'
 module Ploy
   module Command
     class Help < Base
+      
       def run(argv)
         puts Ploy::Command.lookup(argv.shift).help
       end
+
       def help
         return <<helptext
 usage: ploy [command] [options]

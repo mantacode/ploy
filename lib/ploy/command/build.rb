@@ -4,6 +4,7 @@ require 'ploy/localpackage/config'
 module Ploy
   module Command
     class Build < Base
+
       def run(argv)
         config_source = argv.shift || '.ploy-publisher.yml'
         config = Ploy::LocalPackage::Config.new config_source

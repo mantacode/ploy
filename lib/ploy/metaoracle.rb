@@ -3,9 +3,13 @@ require 'json'
 
 module Ploy
   class MetaOracle
+
     def initialize(stack)
       @stack = stack
     end
+
+    # Queries the meta data for the tagged values and returns the results
+    # as a hash
 
     def query
       r = {}

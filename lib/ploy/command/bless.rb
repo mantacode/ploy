@@ -5,6 +5,7 @@ require 'json'
 module Ploy
   module Command
     class Bless < Base
+
       def run(argv)
         o = {}
         optparser(o).parse!(argv)
@@ -42,6 +43,7 @@ helptext
       end
 
       private
+
       def optparser(o = {})
         options = OptionParser.new do |opts|
           opts.banner = ''
