@@ -65,6 +65,14 @@ git_url: git@github.com:org/some-project
 last_committer: Bob Bobson <bob@example.com>
 
 
+### events
+
+```
+---
+One has the option to hook into ploy commands.  After a command is executed, scripts 
+under /etc/ploy/events.d/{COMMAND_NAME} are executed sequentially.
+
+
 ```
 
 ### client config format
