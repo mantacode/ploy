@@ -7,7 +7,7 @@ module Ploy
 
       # take a configuration file, build a deb, and publish it
 
-      def run(argv)
+      def run(argv, input='')
         if not is_pull_request_build then
           res = Ploy::Publisher.new(argv.shift || '.ploy-publisher.yml').publish
           if res then

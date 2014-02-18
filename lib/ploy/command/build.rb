@@ -5,7 +5,7 @@ module Ploy
   module Command
     class Build < Base
 
-      def run(argv)
+      def run(argv, input='')
         config_source = argv.shift || '.ploy-publisher.yml'
         config = Ploy::LocalPackage::Config.new config_source
         path = config.builder.build_deb

@@ -26,12 +26,14 @@ module Ploy
           if event.size > 0
             path += '/' + event
           end
-          Dir.foreach(path) do |item|
-            next if item == '.' or item == '..'
-            name = path + '/' + item
-            if !File.directory?(name) && File.executable?(name)
-              out = Shell.new(name).execute([], input)
-              output.push(name + "\n" + out);
+          if File.directory?(path)
+            Dir.foreach(path) do |item|
+              next if item == '.' or item == '..'
+              name = path + '/' + item
+              if !File.directory?(name) && File.executable?(name)
+                out = Shell.new(name).execute([], input)
+                output.push(name + "\n" + out);
+              end
             end
           end
         end

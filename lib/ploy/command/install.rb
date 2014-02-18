@@ -6,7 +6,7 @@ module Ploy
   module Command
     class Install < Base
 
-      def run(argv)
+      def run(argv, input='')
         o = {
           :version => 'current',
           :branch  => 'master',
