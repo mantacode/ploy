@@ -6,7 +6,7 @@ module Ploy
   module Command
     class Bless < Base
 
-      def run(argv)
+      def run(argv, input='')
         o = {}
         optparser(o).parse!(argv)
         pkgs = []

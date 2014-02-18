@@ -4,7 +4,7 @@ module Ploy
   module Command
     class Help < Base
       
-      def run(argv)
+      def run(argv, input='')
         puts Ploy::Command.lookup(argv.shift).help
       end
 
