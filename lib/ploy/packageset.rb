@@ -2,9 +2,6 @@ module Ploy
   class PackageSet
     attr_accessor :packages
 
-    # initializes an instance given the configuration
-    # the packages are stored into a list
-
     def initialize(conf)
       self.packages = []
       conf['packages'].each do |k,v|
@@ -22,8 +19,6 @@ module Ploy
       @locked = conf['locked']
     end
 
-    # is this PackageSet locked?
-    
     def locked?
       return @locked ? true : false
     end

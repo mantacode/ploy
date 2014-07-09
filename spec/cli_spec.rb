@@ -11,19 +11,15 @@ describe Ploy::Cli do
 
   describe "#run" do
     it "will lookup a command and run it with arguments" do
-      exe = double("command")
-      exe.should_receive(:execute).with(['val'])
-      nxt = double("command")
-      nxt.should_receive(:next) { exe }
-      Ploy::Command.should_receive(:lookup).with('cmd') { nxt }
+      command = double("command")
+      command.should_receive(:run).with(['val'])
+      Ploy::Command.should_receive(:lookup).with('cmd') { command }
       @cli.run(['cmd', 'val'])
     end
     it "will run help by default" do
-      exe = double("command")
-      exe.should_receive(:execute)
-      nxt = double("command")
-      nxt.should_receive(:next) { exe }
-      Ploy::Command.should_receive(:lookup).with('help') { nxt }
+      command = double("command")
+      command.should_receive(:run).with([])
+      Ploy::Command.should_receive(:lookup).with('help') { command }
       @cli.run([])
     end
   end

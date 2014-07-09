@@ -2,7 +2,6 @@ require 'ploy/localpackage/config'
 
 module Ploy
   class Publisher
-
     def initialize(conf_source)
       @config = Ploy::LocalPackage::Config.new conf_source
     end

@@ -8,8 +8,6 @@ module Ploy
     attr_accessor :version
     attr_accessor :variant
 
-    # initialize a new package
-
     def initialize(bucket, deploy, branch, version, variant = nil)
       @bucket = bucket
       @deploy_name = deploy
@@ -19,9 +17,6 @@ module Ploy
 
       @store = Ploy::S3Storage.new(bucket)
     end
-    
-    # checks if the installed version is not euqal to the remote version of 
-    # the repository
 
     def check_new_version
       return (installed_version != remote_version)
@@ -34,8 +29,6 @@ module Ploy
     def remote_version
       return @store.metadata(location)['git_revision']
     end
-    
-    # installs this package
 
     def install
       Tempfile.open(['ploy', '.deb']) do |f|
@@ -44,13 +37,9 @@ module Ploy
       end
     end
 
-    # creates a "blessed" package
-
     def blessed
       return Ploy::Package.new(@bucket, @deploy_name, @branch, @version, "blessed")
     end
-
-    # bless's the package and stores it into a new location
 
     def bless
       b = self.blessed
@@ -61,31 +50,20 @@ module Ploy
       return b
     end
 
-    # grab the location of this package
-
     def location
       return Ploy::Util.remote_name(@deploy_name, @branch, @version, @variant)
     end
-
-    # grab the current location
-    
     def location_current
       return Ploy::Util.remote_name(@deploy_name, @branch, 'current', @variant)
     end
-    
-    # uploads the package to the specified path
-    
+
     def upload(path)
       @store.put(path, location, {'git_revision' => @version})
     end
 
-    # copys the current package into a new location and makes it the current
-
     def make_current
       @store.copy(location, location_current)
     end
-
-    # class method to create a package given a bucket and meta data
 
     def self.from_metadata(bucket, meta)
       out = []

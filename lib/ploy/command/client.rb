@@ -6,7 +6,6 @@ require 'optparse'
 module Ploy
   module Command
     class Client < Base
-
       def run(argv)
         o = {
           :target_packages => []

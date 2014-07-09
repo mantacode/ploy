@@ -5,7 +5,6 @@ require 'ploy/package'
 module Ploy
   module Command
     class Install < Base
-
       def run(argv)
         o = {
           :version => 'current',
