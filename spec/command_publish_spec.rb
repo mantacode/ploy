@@ -4,7 +4,7 @@ describe Ploy::Command::Publish do
   describe "#run" do
     it "will run Publisher#publish with correct arguments and return true" do
       pub = double("publisher")
-      pub.should_receive(:publish)
+      pub.should_receive(:publish) { [] }
       Ploy::Publisher.should_receive(:new).with("test.yml") { pub }
 
       argv = ["test.yml"]

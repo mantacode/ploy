@@ -3,13 +3,8 @@ require 'ploy/localpackage/debbuilder'
 module Ploy
   module LocalPackage
     class Config
-      def initialize(conf_source = '.ploy-publisher.yml')
-        @conf = conf_source
-        if (/^---/ =~ conf_source) then
-          @conf = YAML::load(conf_source)
-        else
-          @conf = YAML::load_file(conf_source)
-        end
+      def initialize(conf)
+        @conf = conf
       end
 
       def builder
@@ -37,6 +32,24 @@ module Ploy
         )
       end
 
+      def self.load(conf_source = '.ploy-publisher.yml')
+        conf = nil
+        if (/^---/ =~ conf_source) then
+          conf = YAML::load(conf_source)
+        else
+          conf = YAML::load_file(conf_source)
+        end
+        lps = []
+        if conf.key? "packages"
+          conf['packages'].each do |pkg|
+            lps.push(self.new(conf.merge(pkg)))
+          end
+        else
+          lps.push(self.new(conf))
+        end
+        return lps
+      end
+
       private
       def git_branch
         return ENV['TRAVIS_BRANCH'] || `git symbolic-ref -q HEAD |sed -e 's/.*\\///'`.chomp
@@ -49,6 +62,7 @@ module Ploy
       def git_timestamp
         return `git log -1 --pretty=format:"%ct"`
       end
+
 
     end
   end

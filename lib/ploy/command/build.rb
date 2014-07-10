@@ -6,9 +6,10 @@ module Ploy
     class Build < Base
       def run(argv)
         config_source = argv.shift || '.ploy-publisher.yml'
-        config = Ploy::LocalPackage::Config.new config_source
-        path = config.builder.build_deb
-        puts "ploy build deb: #{path}"
+        Ploy::LocalPackage::Config.load(config_source).each do |config|
+          path = config.builder.build_deb
+          puts "ploy build deb: #{path}"
+        end
         return true
       end
 
