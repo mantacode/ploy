@@ -6,12 +6,14 @@ module Ploy
     class Publish < Base
       def run(argv)
         if not is_pull_request_build then
-          res = Ploy::Publisher.new(argv.shift || '.ploy-publisher.yml').publish
-          if res then
-            puts "ploy publish (#{res.deploy_name} #{res.branch} #{res.version}) ok"
+          published = Ploy::Publisher.new(argv.shift || '.ploy-publisher.yml').publish
+          if published.length > 0 then
+            published.each do |res|
+              puts "ploy publish (#{res.deploy_name} #{res.branch} #{res.version}) ok"
+            end
           end
-          puts "debug: git rev-parse: #{`git rev-parse HEAD`.chomp}"
-          puts "debug: git symbolic-ref: #{`git symbolic-ref -q HEAD |sed -e 's/.*\\///'`.chomp}"
+          #puts "debug: git rev-parse: #{`git rev-parse HEAD`.chomp}"
+          #puts "debug: git symbolic-ref: #{`git symbolic-ref -q HEAD |sed -e 's/.*\\///'`.chomp}"
         else
           puts "skipping publish; this is a PR build"
         end
