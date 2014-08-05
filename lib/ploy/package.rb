@@ -7,13 +7,18 @@ module Ploy
     attr_accessor :branch
     attr_accessor :version
     attr_accessor :variant
+    attr_accessor :deployvia
 
-    def initialize(bucket, deploy, branch, version, variant = nil)
+    def initialize(bucket, deploy, branch, version, variant = nil, deployvia = nil)
       @bucket = bucket
       @deploy_name = deploy
       @branch = branch
       @version = version
       @variant = variant
+      @deployvia = 'ploy-install'
+      unless deployvia.nil?
+        @deployvia = deployvia
+      end
 
       @store = Ploy::S3Storage.new(bucket)
     end
