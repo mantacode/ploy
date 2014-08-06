@@ -62,7 +62,7 @@ helptext
       def installable_packages(target_packages, packages)
         tph = {}
         target_packages.each { |tp| tph[tp] = true }
-        packages.find_all { |p| tph[p.deploy_name] }
+        installables = packages.find_all { |p| tph[p.deploy_name] && p.deployvia == 'ploy-install' }
       end
 
       private

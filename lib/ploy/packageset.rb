@@ -13,7 +13,8 @@ module Ploy
           k,
           v['branch'] || conf['branch'],
           v['version'] || conf['version'],
-          v['variant'] || conf['variant'] || nil
+          v['variant'] || conf['variant'] || nil,
+          v['deployvia'] || conf['deployvia'] || nil
         )
       end
       @locked = conf['locked']
