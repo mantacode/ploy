@@ -1,30 +1,43 @@
 require 'ploy/command/base'
 require 'ploy/package'
 require 'json'
+require 'yaml'
 
 module Ploy
   module Command
     class List < Base
       def run(argv)
-        o = {:branch => 'master', :all => false}
+        o = {:branch => 'master', :all => false, :json => false, :deploy => nil}
         optparser(o).parse!(argv)
-        pkgs = []
-        if (o[:datapath]) then
-          pkgs = Ploy::Package.from_metadata(o[:bucket], JSON.parse(File.read(o[:datapath])))
-        else
-          pkgs.push Ploy::Package.new(o[:bucket], o[:deploy], o[:branch], o[:version])
-        end
+        #puts o.to_yaml
 
         bucket = o[:bucket]
         branch = o[:branch]
 
-        store = Ploy::S3Storage.new(bucket)
-        store.list.each do |name|
+        packages = []
+        if o[:deploy].nil?
+          store = Ploy::S3Storage.new(bucket)
+          packages = store.list
+        else
+          packages = [o[:deploy]]
+        end
+
+        packages.each do |name|
           current = Ploy::Package.new(bucket, name, branch, 'current').remote_version
           blessed_current = Ploy::Package.new(bucket, name, branch, 'current', 'blessed').remote_version
 
           if o[:all] || current != blessed_current
-            puts "#{name} #{branch} #{current} #{blessed_current}"
+            if o[:json]
+              h = { name => {
+                'name'        => name,
+                'sha'         => current,
+                'branch'      => branch,
+                'blessed_sha' => blessed_current
+              } }
+              puts h.to_json
+            else
+              puts "#{name} #{branch} #{current} #{blessed_current}"
+            end 
           end
         end
       end
@@ -62,6 +75,9 @@ helptext
 
           opts.on("-a", "--all", "include packages where blessed is current") do |asdf|
             o[:all] = true
+          end
+          opts.on("-j", "--json", "output json suitable for bless") do |asdf|
+            o[:json] = true
           end
         end
         return options
