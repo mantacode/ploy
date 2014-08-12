@@ -18,7 +18,7 @@ module Ploy
         pkgs.each do |pkg|
           blessed = pkg.bless
           blessed.make_current
-          puts "blessed #{o[:deploy]}/#{o[:branch]} at #{o[:version]}"
+          puts "blessed #{pkg.deploy_name}/#{pkg.branch} at #{pkg.version}"
         end
       end
 
