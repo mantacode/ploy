@@ -17,6 +17,7 @@ module Ploy
         'oracle'  => Ploy::Command::Oracle,
         'client'  => Ploy::Command::Client,
         'build'   => Ploy::Command::Build,
+        'list'    => Ploy::Command::List,
       }
       mod = lookup[topic] || lookup['help']
       return mod.new
