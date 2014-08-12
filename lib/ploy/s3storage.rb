@@ -36,5 +36,18 @@ module Ploy
         return {}
       end
     end
+
+    def list
+      tree = AWS::S3.new.buckets[@bucketname].as_tree
+      dirs = tree.children.select(&:branch?).collect(&:prefix)
+      package_names = []
+      dirs.each do |dir|
+        dir.chop!
+        if dir != 'hub' && dir != 'blessed'
+          package_names.push(dir)
+        end
+      end
+      return package_names
+    end
   end
 end

@@ -5,6 +5,7 @@ require 'ploy/command/bless'
 require 'ploy/command/oracle'
 require 'ploy/command/client'
 require 'ploy/command/build'
+require 'ploy/command/list'
 
 module Ploy
   module Command
@@ -17,6 +18,7 @@ module Ploy
         'oracle'  => Ploy::Command::Oracle,
         'client'  => Ploy::Command::Client,
         'build'   => Ploy::Command::Build,
+        'list'    => Ploy::Command::List
       }
       mod = lookup[topic] || lookup['help']
       return mod.new

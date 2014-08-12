@@ -99,6 +99,10 @@ packages:
 Improvements welcome. Error handling is minimal. Tests are thin in spots. Not
 much code documentation (yet).
 
+```
+env RUBYLIB=./lib bundle exec bin/ploy help
+```
+
 ### Run Tests
 
 ```

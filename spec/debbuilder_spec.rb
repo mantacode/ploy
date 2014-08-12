@@ -1,6 +1,8 @@
 require 'rspec/given'
 require 'ploy/localpackage/debbuilder'
 
+cur_f = nil
+
 shared_examples "basic deb" do
   Then { File.exists? filename }
   And  { `dpkg-deb -f #{filename} Version`.chomp == '123456.fakebranch' }
@@ -11,7 +13,7 @@ shared_examples "basic deb" do
   And  { `dpkg-deb -I #{filename} postinst` =~ /^#!\/bin\/bash/ }
   And  { `dpkg-deb -I #{filename} postinst` =~ /somepostinst/ }
   after(:all) do
-    File.delete(filename)
+    File.delete(cur_f)
   end
 end
 
@@ -32,7 +34,7 @@ describe Ploy::LocalPackage::DebBuilder do
       )
     end
     context "building a deb file" do
-      When(:filename) { db.build_deb }
+      When(:filename) { cur_f = db.build_deb; cur_f }
       Then { `dpkg-deb -c #{filename}` =~ / \.\/etc\/dist2\/dist2.txt\n/ }
       it_behaves_like "basic deb"
     end
