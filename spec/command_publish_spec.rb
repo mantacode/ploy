@@ -9,7 +9,7 @@ describe Ploy::Command::Publish do
       subject = Ploy::Command::Publish.new
       subject.stub(:is_pull_request_build) { false }
       argv = ["test.yml"]
-      expect(subject.run(argv)).to be_true
+      expect(subject.run(argv)).to be true
     end
   end
   describe "#help" do
