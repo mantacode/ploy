@@ -20,12 +20,12 @@ describe Ploy::Package do
     it "compares the same local and remote versions" do
       Ploy::Package.any_instance.should_receive(:`).with(/dpkg-query/) { "abcd\n" }
       Ploy::S3Storage.any_instance.should_receive(:metadata) { { 'git_revision' => 'abcd' } }
-      expect(@inst.check_new_version).to be_false
+      expect(@inst.check_new_version).to be false
     end
     it "compares different local and remote versions" do
       Ploy::Package.any_instance.should_receive(:`).with(/dpkg-query/) { "abcd\n" }
       Ploy::S3Storage.any_instance.should_receive(:metadata) { { 'git_revision' => 'bcd' } }
-      expect(@inst.check_new_version).to be_true
+      expect(@inst.check_new_version).to be true
     end
   end
 
