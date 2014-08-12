@@ -6,7 +6,7 @@ module Ploy
   module Command
     class List < Base
       def run(argv)
-        o = {:branch => 'master'}
+        o = {:branch => 'master', :all => false}
         optparser(o).parse!(argv)
         pkgs = []
         if (o[:datapath]) then
@@ -15,12 +15,17 @@ module Ploy
           pkgs.push Ploy::Package.new(o[:bucket], o[:deploy], o[:branch], o[:version])
         end
 
-        store = Ploy::S3Storage.new(o[:bucket])
+        bucket = o[:bucket]
+        branch = o[:branch]
+
+        store = Ploy::S3Storage.new(bucket)
         store.list.each do |name|
           current = Ploy::Package.new(bucket, name, branch, 'current').remote_version
           blessed_current = Ploy::Package.new(bucket, name, branch, 'current', 'blessed').remote_version
 
-          puts "#{name} #{branch} #{current} #{blessed_current}"
+          if o[:all] || current != blessed_current
+            puts "#{name} #{branch} #{current} #{blessed_current}"
+          end
         end
       end
 
@@ -35,7 +40,9 @@ Examples:
 
 Summary
 
-  The list command lists available published packages, their current sha, and their current blessed sha.
+  The list command lists published packages, their current sha, and
+  their current blessed sha. (By default it only lists packages where
+  blessed is not current.)
 helptext
       end
 
@@ -51,6 +58,10 @@ helptext
           end
           opts.on("-B", "--branch BRANCH", "use the given branch instead of #{o[:branch]}") do |branch|
             o[:branch] = branch
+          end
+
+          opts.on("-a", "--all", "include packages where blessed is current") do |asdf|
+            o[:all] = true
           end
         end
         return options

@@ -42,6 +42,7 @@ module Ploy
       dirs = tree.children.select(&:branch?).collect(&:prefix)
       package_names = []
       dirs.each do |dir|
+        dir.chop!
         if dir != 'hub' && dir != 'blessed'
           package_names.push(dir)
         end
