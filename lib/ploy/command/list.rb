@@ -7,7 +7,7 @@ module Ploy
   module Command
     class List < Base
       def run(argv)
-        o = {:branch => 'master', :all => false, :json => false, :deploy => nil}
+        o = {:branch => 'master', :all => false, :json => false, :deploy => nil, :variant => 'blessed'}
         optparser(o).parse!(argv)
         #puts o.to_yaml
 
@@ -24,7 +24,7 @@ module Ploy
 
         packages.each do |name|
           current = Ploy::Package.new(bucket, name, branch, 'current').remote_version
-          blessed_current = Ploy::Package.new(bucket, name, branch, 'current', 'blessed').remote_version
+          blessed_current = Ploy::Package.new(bucket, name, branch, 'current', o[:variant]).remote_version
 
           if o[:all] || current != blessed_current
             if o[:json]
@@ -72,7 +72,9 @@ helptext
           opts.on("-B", "--branch BRANCH", "use the given branch instead of #{o[:branch]}") do |branch|
             o[:branch] = branch
           end
-
+          opts.on("--variant VARIANT", "bless with a different variant. default is (blessed)") do |variant|
+            o[:variant] = variant
+          end
           opts.on("-a", "--all", "include packages where blessed is current") do |asdf|
             o[:all] = true
           end

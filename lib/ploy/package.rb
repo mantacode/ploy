@@ -42,12 +42,12 @@ module Ploy
       end
     end
 
-    def blessed
-      return Ploy::Package.new(@bucket, @deploy_name, @branch, @version, "blessed")
+    def blessed(variant="blessed")
+      return Ploy::Package.new(@bucket, @deploy_name, @branch, @version, variant)
     end
 
-    def bless
-      b = self.blessed
+    def bless(variant="blessed")
+      b = self.blessed(variant)
       @store.copy(
         location,
         b.location
