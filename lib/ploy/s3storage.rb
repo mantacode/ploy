@@ -43,7 +43,7 @@ module Ploy
       package_names = []
       dirs.each do |dir|
         dir.chop!
-        if dir != 'hub' && dir != 'blessed'
+        if dir != 'hub' && dir != 'blessed' && dir != 'staging'
           package_names.push(dir)
         end
       end

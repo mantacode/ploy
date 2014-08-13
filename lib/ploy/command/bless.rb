@@ -6,7 +6,7 @@ module Ploy
   module Command
     class Bless < Base
       def run(argv)
-        o = {}
+        o = { :variant => "blessed" }
         optparser(o).parse!(argv)
         pkgs = []
         if (o[:datapath]) then
@@ -16,9 +16,9 @@ module Ploy
         end
 
         pkgs.each do |pkg|
-          blessed = pkg.bless
+          blessed = pkg.bless(o[:variant])
           blessed.make_current
-          puts "blessed #{pkg.deploy_name}/#{pkg.branch} at #{pkg.version}"
+          puts "blessed #{pkg.deploy_name}/#{pkg.branch} at #{pkg.version} with variant #{o[:variant]}"
         end
       end
 
@@ -59,6 +59,9 @@ helptext
           end
           opts.on("-f", "--data-file PATH", "load a set of dep/branch/version data from a", "version file compatible with ploy oracle output") do |path|
             o[:datapath] = path
+          end
+          opts.on("--variant VARIANT", "bless with a different variant. default is (blessed)") do |variant|
+            o[:variant] = variant
           end
         end
         return options
