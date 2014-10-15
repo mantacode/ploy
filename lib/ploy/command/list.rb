@@ -6,42 +6,37 @@ require 'yaml'
 module Ploy
   module Command
     class List < Base
+
       def run(argv)
-        o = {:branch => 'master', :all => false, :json => false, :deploy => nil, :variant => 'blessed'}
+        o = { branch: 'master', all: false, json: false, deploy: nil, variant: 'blessed' }
         optparser(o).parse!(argv)
-        #puts o.to_yaml
 
         bucket = o[:bucket]
         branch = o[:branch]
 
-        packages = []
-        if o[:deploy].nil?
-          store = Ploy::S3Storage.new(bucket)
-          packages = store.list
-        else
-          packages = [o[:deploy]]
-        end
+        packages = o[:deploy].nil? ? Ploy::S3Storage.new(bucket).list : [o[:deploy]]
 
-        packages.each do |name|
+        packages.each_with_object([]) do |name, json_array|
           current = Ploy::Package.new(bucket, name, branch, 'current').remote_version
           blessed_current = Ploy::Package.new(bucket, name, branch, 'current', o[:variant]).remote_version
 
           if o[:all] || current != blessed_current
             if o[:json]
               h = { name => {
-                'name'        => name,
-                'sha'         => current,
-                'branch'      => branch,
-                'blessed_sha' => blessed_current
-              } }
+                  'name'        => name,
+                  'sha'         => current,
+                  'branch'      => branch,
+                  'blessed_sha' => blessed_current
+                } }
               puts h.to_json
+              json_array << h
             else
               puts "#{name} #{branch} #{current} #{blessed_current}"
-            end 
+            end
           end
-        end
+        end.to_json
       end
-
+      
       def help
         return <<helptext
 usage: ploy -b BUCKET [-d DEPLOYMENT -B BRANCH]
