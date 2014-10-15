@@ -1,3 +1,7 @@
 *.gem
 *.deb
 quick.sh
+/.bundle/
+/pkg/
+/tmp/
+*.bundle
