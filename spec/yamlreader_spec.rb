@@ -16,11 +16,9 @@ describe Ploy::YamlReader do
     Then { result['bucket'] == 'bucketname' }
   end
   context "read from S3" do
-# any_instance gets errors here for... some reason
-#    Ploy::S3Storage.any_instance.stub(:read) { ex_str }
-#    puts Ploy::S3Storage.any_instance
-#    When(:result) { yr.from_s3('bucket', 'name') }
-#    And  { result['bucket'] == 'bucketname' }
+    Given{ expect_any_instance_of(Ploy::S3Storage).to receive(:read).and_return(ex_str) }
+    When(:result){ yr.from_s3('bucket', 'name') }
+    Then{ result['bucket'] == 'bucketname' }
   end
   context "read from HTTP" do
     Given{ expect(Net::HTTP).to receive(:get).and_return(ex_str) }
