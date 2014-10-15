@@ -23,10 +23,8 @@ describe Ploy::YamlReader do
 #    And  { result['bucket'] == 'bucketname' }
   end
   context "read from HTTP" do
-    When(:result) do
-      Net::HTTP.stub(:get) { ex_str }
-      yr.from_http('http://www.example.com/thing.yml')
-    end
+    Given{ expect(Net::HTTP).to receive(:get).and_return(ex_str) }
+    When(:result){ yr.from_http('http://www.example.com/thing.yml') }
     Then { result['bucket'] == 'bucketname' }
   end
 

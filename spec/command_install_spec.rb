@@ -3,10 +3,11 @@ require 'ploy/command/install'
 describe Ploy::Command::Install do
   describe "#run" do
     it "will run Package#install with correct arguments and return true" do
-      Ploy::Package.any_instance.should_receive(:install)
-      argv = ['-b', 'bucket', '-d', 'deploy', '-B', 'branch', '-v', 'version']
-      Ploy::Package.any_instance.should_receive(:check_new_version) { 'abcde' }
-      expect(Ploy::Command::Install.new.run(argv)).to be true
+      argv = ['-b', 'bucket', '-d', 'deploy', '-B', 'branch', '-v', 'version']      
+      expect_any_instance_of(Ploy::Package).to receive(:install)
+      expect_any_instance_of(Ploy::Package).to receive(:check_new_version).and_return('abcde')
+      expect(STDOUT).to receive(:puts).with('installed deploy')
+      expect(Ploy::Command::Install.new.run argv).to be true
     end
   end
   describe "#help" do

@@ -9,29 +9,29 @@ describe Ploy::S3Storage do
   end
   describe "#put" do
     it "uses aws-sdk to upload a file to s3" do
-      fakepath = "nothing.deb"
-      uploadpath = "foo/bar"
+      fake_path = "nothing.deb"
+      upload_path = "foo/bar"
 
       object = double("object")
-      object.should_receive(:write) do | f,opts2 |
+      expect(object).to receive(:write) do |f, opts2|
         expect(f).to be_a(Pathname)
         expect(opts2).to be_a(Hash)
       end
 
       objects = double("objects")
-      objects.should_receive(:[]).with(uploadpath) { object }
+      expect(objects).to receive(:[]).with(upload_path).and_return(object)
 
       bucket = double("bucket")
-      bucket.stub(:objects) { objects }
+      expect(bucket).to receive(:objects).and_return(objects)
 
       buckets = double("buckets")
-      buckets.should_receive(:[]).with("testbucket") { bucket }
+      expect(buckets).to receive(:[]).with("testbucket").and_return(bucket)
 
       s3 = double("s3")
-      s3.should_receive(:buckets) { buckets }
-      AWS::S3.stub(:new) { s3 }
+      expect(s3).to receive(:buckets).and_return(buckets)
+      expect(AWS::S3).to receive(:new).and_return(s3)
       
-      @storage.put(fakepath, uploadpath)
+      @storage.put(fake_path, upload_path)
     end
   end
   describe "#copy" do
@@ -40,51 +40,49 @@ describe Ploy::S3Storage do
       to = "d/e/f"
 
       from_obj = double("from_obj")
-      from_obj.should_receive(:copy_to).with(to)
+      expect(from_obj).to receive(:copy_to).with(to)
 
       objects = double("objects")
-      objects.should_receive(:[]).with(from) { from_obj }
+      expect(objects).to receive(:[]).with(from).and_return(from_obj)
 
       bucket = double("bucket")
-      bucket.stub(:objects) { objects }
+      expect(bucket).to receive(:objects).and_return(objects)
 
       buckets = double("buckets")
-      buckets.should_receive(:[]).with("testbucket") { bucket }
+      expect(buckets).to receive(:[]).with("testbucket").and_return(bucket)
 
       s3 = double("s3")
-      s3.should_receive(:buckets) { buckets }
-      AWS::S3.stub(:new) { s3 }
+      expect(s3).to receive(:buckets).and_return(buckets)
+      expect(AWS::S3).to receive(:new).and_return(s3)
     
       @storage.copy(from, to) 
     end
   end
-
   describe "#read" do
   end
-
   describe "#get" do
     it "downloads a file using aws-sdk" do
       from = "a/b/c"
-      fakeio = double("fakeio")
-      fakeio.should_receive(:flush)
+      fake_io = double("fakeio")
+      expect(fake_io).to receive(:flush)
 
       object = double("object")
-      object.should_receive(:read) { "test" }
+      expect(object).to receive(:read).and_return("test")
     
       objects = double("objects")
-      objects.should_receive(:[]).with(from) { object }
+      expect(objects).to receive(:[]).with(from).and_return(object)
 
       bucket = double("bucket")
-      bucket.stub(:objects) { objects }
+      expect(bucket).to receive(:objects).and_return(objects)
 
       buckets = double("buckets")
-      buckets.should_receive(:[]).with("testbucket") { bucket }
+      expect(buckets).to receive(:[]).with("testbucket").and_return(bucket)
 
       s3 = double("s3")
-      s3.should_receive(:buckets) { buckets }
-      AWS::S3.stub(:new) { s3 }
+      expect(s3).to receive(:buckets).and_return(buckets)
+      expect(AWS::S3).to receive(:new).and_return(s3)
 
-      @storage.get(from, fakeio)
+      @storage.get(from, fake_io)
     end
   end
 end
