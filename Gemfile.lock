@@ -1,3 +1,11 @@
+PATH
+  remote: .
+  specs:
+    ploy (0.0.23)
+      aws-sdk
+      fpm
+      sinatra
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -8,11 +16,11 @@ GEM
       nokogiri (>= 1.4.4)
     backports (3.6.0)
     cabin (0.6.1)
-    childprocess (0.5.3)
+    childprocess (0.5.5)
       ffi (~> 1.0, >= 1.0.11)
     clamp (0.6.3)
     diff-lcs (1.2.5)
-    ffi (1.9.3)
+    ffi (1.9.6)
     fpm (1.2.0)
       arr-pm (~> 0.0.9)
       backports (>= 2.6.2)
@@ -30,6 +38,7 @@ GEM
     rack (1.5.2)
     rack-protection (1.5.3)
       rack
+    rake (10.3.2)
     rspec (3.0.0)
       rspec-core (~> 3.0.0)
       rspec-expectations (~> 3.0.0)
@@ -56,8 +65,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  aws-sdk
-  fpm
+  bundler (~> 1.7)
+  ploy!
+  rake (~> 10.0)
   rspec
   rspec-given
-  sinatra
