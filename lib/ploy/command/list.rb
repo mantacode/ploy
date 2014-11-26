@@ -6,42 +6,44 @@ require 'yaml'
 module Ploy
   module Command
     class List < Base
+
       def run(argv)
         o = {:branch => 'master', :all => false, :json => false, :deploy => nil, :variant => 'blessed'}
         optparser(o).parse!(argv)
-        #puts o.to_yaml
 
-        bucket = o[:bucket]
-        branch = o[:branch]
-
-        packages = []
-        if o[:deploy].nil?
-          store = Ploy::S3Storage.new(bucket)
-          packages = store.list
-        else
-          packages = [o[:deploy]]
+        packages = o[:deploy].nil? ? Ploy::S3Storage.new(o[:bucket]).list : [o[:deploy]]
+        
+        generate_list(o[:bucket], packages, o[:branch], o[:variant], o[:json], o[:all]).each do |package|
+          puts package
         end
-
-        packages.each do |name|
+      end
+      
+      def generate_list(bucket, packages, branch, variant, json, all)
+        packages.each_with_object([]) do |name, collection|
           current = Ploy::Package.new(bucket, name, branch, 'current').remote_version
-          blessed_current = Ploy::Package.new(bucket, name, branch, 'current', o[:variant]).remote_version
+          blessed_current = Ploy::Package.new(bucket, name, branch, 'current', variant).remote_version
 
-          if o[:all] || current != blessed_current
-            if o[:json]
-              h = { name => {
-                'name'        => name,
-                'sha'         => current,
-                'branch'      => branch,
-                'blessed_sha' => blessed_current
-              } }
-              puts h.to_json
-            else
-              puts "#{name} #{branch} #{current} #{blessed_current}"
-            end 
+          next unless all || current != blessed_current
+
+          if json
+            collection << json_package(name, branch, current, blessed_current)
+          else
+            collection << "#{name} #{branch} #{current} #{blessed_current}"
           end
         end
       end
 
+      def json_package(package, branch, current, blessed_current)
+        {
+          package => {
+            'name'        => package,
+            'sha'         => current,
+            'branch'      => branch,
+            'blessed_sha' => blessed_current
+          }
+        }.to_json
+      end
+      
       def help
         return <<helptext
 usage: ploy -b BUCKET [-d DEPLOYMENT -B BRANCH]
