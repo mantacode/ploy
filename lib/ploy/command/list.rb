@@ -8,33 +8,40 @@ module Ploy
     class List < Base
 
       def run(argv)
-        o = { branch: 'master', all: false, json: false, deploy: nil, variant: 'blessed' }
+        o = {:branch => 'master', :all => false, :json => false, :deploy => nil, :variant => 'blessed'}
         optparser(o).parse!(argv)
 
-        bucket = o[:bucket]
-        branch = o[:branch]
-
-        packages = o[:deploy].nil? ? Ploy::S3Storage.new(bucket).list : [o[:deploy]]
-
-        packages.each_with_object([]) do |name, json_array|
+        packages = o[:deploy].nil? ? Ploy::S3Storage.new(o[:bucket]).list : [o[:deploy]]
+        
+        generate_list(o[:bucket], packages, o[:branch], o[:variant], o[:json], o[:all]).each do |package|
+          puts package
+        end
+      end
+      
+      def generate_list(bucket, packages, branch, variant, json, all)
+        packages.each_with_object([]) do |name, collection|
           current = Ploy::Package.new(bucket, name, branch, 'current').remote_version
-          blessed_current = Ploy::Package.new(bucket, name, branch, 'current', o[:variant]).remote_version
+          blessed_current = Ploy::Package.new(bucket, name, branch, 'current', variant).remote_version
 
-          if o[:all] || current != blessed_current
-            if o[:json]
-              h = { name => {
-                  'name'        => name,
-                  'sha'         => current,
-                  'branch'      => branch,
-                  'blessed_sha' => blessed_current
-                } }
-              puts h.to_json
-              json_array << h
-            else
-              puts "#{name} #{branch} #{current} #{blessed_current}"
-            end
+          next unless all || current != blessed_current
+
+          if json
+            collection << json_package(name, branch, current, blessed_current)
+          else
+            collection << "#{name} #{branch} #{current} #{blessed_current}"
           end
-        end.to_json
+        end
+      end
+
+      def json_package(package, branch, current, blessed_current)
+        {
+          package => {
+            'name'        => package,
+            'sha'         => current,
+            'branch'      => branch,
+            'blessed_sha' => blessed_current
+          }
+        }.to_json
       end
       
       def help
