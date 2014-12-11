@@ -20,9 +20,15 @@ module Ploy
           else
             ips = installable_packages(o[:target_packages], ps.packages)
             ips.each do |package|
-              if package.check_new_version then
-                package.install
-                puts "installed #{package.deploy_name}"
+              if package.installed_version == '' then
+                package.version
+              elsif package.check_new_version then
+                if package.updatevia == 'swf'
+                  puts "skipping update via ploy. updatevia=(%{package.updatevia})"
+                else
+                  package.install
+                  puts "updated #{package.deploy_name}"
+                end
               else
                 puts "no new #{package.deploy_name} available"
               end
@@ -62,7 +68,7 @@ helptext
       def installable_packages(target_packages, packages)
         tph = {}
         target_packages.each { |tp| tph[tp] = true }
-        installables = packages.find_all { |p| tph[p.deploy_name] && p.deployvia == 'ploy-install' }
+        installables = packages.find_all { |p| tph[p.deploy_name] }
       end
 
       private

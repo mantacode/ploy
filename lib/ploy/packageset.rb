@@ -14,7 +14,7 @@ module Ploy
           v['branch'] || conf['branch'],
           v['version'] || conf['version'],
           v['variant'] || conf['variant'] || nil,
-          v['deployvia'] || conf['deployvia'] || nil
+          v['updatevia'] || conf['updatevia'] || nil
         )
       end
       @locked = conf['locked']
