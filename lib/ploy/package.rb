@@ -7,17 +7,17 @@ module Ploy
     attr_accessor :branch
     attr_accessor :version
     attr_accessor :variant
-    attr_accessor :deployvia
+    attr_accessor :updatevia
 
-    def initialize(bucket, deploy, branch, version, variant = nil, deployvia = nil)
+    def initialize(bucket, deploy, branch, version, variant = nil, updatevia = nil)
       @bucket = bucket
       @deploy_name = deploy
       @branch = branch
       @version = version
       @variant = variant
-      @deployvia = 'ploy-install'
-      unless deployvia.nil?
-        @deployvia = deployvia
+      @updatevia = 'ploy'
+      unless updatevia.nil?
+        @updatevia = updatevia
       end
 
       @store = Ploy::S3Storage.new(bucket)
@@ -28,7 +28,11 @@ module Ploy
     end
 
     def installed_version
-      return `dpkg-query -W -f '${gitrev}' #{@deploy_name}`.chomp
+      version = `dpkg-query -W -f '${gitrev}' #{@deploy_name}`.chomp
+      if version =~ /no packages found/i
+        version = ''
+      end
+      return version
     end
 
     def remote_version
