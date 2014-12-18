@@ -22,7 +22,7 @@ module Ploy
               package.install
             elsif package.check_new_version then
               if package.updatevia == 'swf'
-                puts "skipping update via ploy. updatevia=(%{package.updatevia})"
+                puts "skipping update via ploy. updatevia=(#{package.updatevia})"
               else
                 if ps.locked?
                   puts "locked, so not updating"
