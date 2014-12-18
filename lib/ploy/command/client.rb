@@ -15,23 +15,24 @@ module Ploy
         
         if conf then
           ps = Ploy::PackageSet.new(conf)
-          if ps.locked?
-            puts "locked. taking no action."
-          else
-            ips = installable_packages(o[:target_packages], ps.packages)
-            ips.each do |package|
-              if package.installed_version == '' then
-                package.version
-              elsif package.check_new_version then
-                if package.updatevia == 'swf'
-                  puts "skipping update via ploy. updatevia=(%{package.updatevia})"
-                else
-                  package.install
-                  puts "updated #{package.deploy_name}"
-                end
+          ips = installable_packages(o[:target_packages], ps.packages)
+          ips.each do |package|
+            if package.installed_version == '' then
+              puts "installing #{package.deploy_name} for the first time"
+              package.install
+            elsif package.check_new_version then
+              if package.updatevia == 'swf'
+                puts "skipping update via ploy. updatevia=(%{package.updatevia})"
               else
-                puts "no new #{package.deploy_name} available"
+                if ps.locked?
+                  puts "locked, so not updating"
+                else
+                  puts "updating #{package.deploy_name}"
+                  package.install
+                end
               end
+            else
+              puts "no new #{package.deploy_name} available"
             end
           end
         else
