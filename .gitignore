@@ -1,3 +1,6 @@
 *.gem
 *.deb
+.idea
+*.swp
+*~
 quick.sh
