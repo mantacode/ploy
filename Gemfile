@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-gem 'aws-sdk'
+gem 'aws-sdk', '~>1'
 gem 'fpm'
 gem 'sinatra'
 group :test do
