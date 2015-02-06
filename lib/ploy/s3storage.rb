@@ -7,29 +7,29 @@ module Ploy
     end
 
     def put(path, name, meta = {})
-      Aws::S3.new.buckets[@bucketname].objects[name].write(
+      AWS::S3.new.buckets[@bucketname].objects[name].write(
         Pathname.new(path),
         { :metadata => meta }
       )
     end
 
     def copy(from, to)
-      Aws::S3.new.buckets[@bucketname].objects[from].copy_to(to)
+      AWS::S3.new.buckets[@bucketname].objects[from].copy_to(to)
     end
 
     def read(from)
-      Aws::S3.new.buckets[@bucketname].objects[from].read
+      AWS::S3.new.buckets[@bucketname].objects[from].read
     end
 
     def get(from, fileio)
-      Aws::S3.new.buckets[@bucketname].objects[from].read do |chunk|
+      AWS::S3.new.buckets[@bucketname].objects[from].read do |chunk|
         fileio.write(chunk)
       end
       fileio.flush
     end
 
     def metadata(loc)
-      o = Aws::S3.new.buckets[@bucketname].objects[loc]
+      o = AWS::S3.new.buckets[@bucketname].objects[loc] 
       if (o.exists?) then
         return o.metadata
       else
@@ -38,7 +38,7 @@ module Ploy
     end
 
     def list
-      tree = Aws::S3.new.buckets[@bucketname].as_tree
+      tree = AWS::S3.new.buckets[@bucketname].as_tree
       dirs = tree.children.select(&:branch?).collect(&:prefix)
       package_names = []
       dirs.each do |dir|

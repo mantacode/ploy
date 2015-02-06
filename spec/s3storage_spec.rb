@@ -29,7 +29,7 @@ describe Ploy::S3Storage do
 
       s3 = double("s3")
       s3.should_receive(:buckets) { buckets }
-      Aws::S3.stub(:new) { s3 }
+      AWS::S3.stub(:new) { s3 }
       
       @storage.put(fakepath, uploadpath)
     end
@@ -53,7 +53,7 @@ describe Ploy::S3Storage do
 
       s3 = double("s3")
       s3.should_receive(:buckets) { buckets }
-      Aws::S3.stub(:new) { s3 }
+      AWS::S3.stub(:new) { s3 }
     
       @storage.copy(from, to) 
     end
@@ -82,7 +82,7 @@ describe Ploy::S3Storage do
 
       s3 = double("s3")
       s3.should_receive(:buckets) { buckets }
-      Aws::S3.stub(:new) { s3 }
+      AWS::S3.stub(:new) { s3 }
 
       @storage.get(from, fakeio)
     end

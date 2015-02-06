@@ -3,17 +3,10 @@ GEM
   specs:
     arr-pm (0.0.9)
       cabin (> 0)
-    aws-sdk (2.0.22)
-      aws-sdk-resources (= 2.0.22)
-    aws-sdk-core (2.0.22)
-      builder (~> 3.0)
-      jmespath (~> 1.0)
-      multi_json (~> 1.0)
-      multi_xml (~> 0.5)
-    aws-sdk-resources (2.0.22)
-      aws-sdk-core (= 2.0.22)
+    aws-sdk (1.51.0)
+      json (~> 1.4)
+      nokogiri (>= 1.4.4)
     backports (3.6.0)
-    builder (3.2.2)
     cabin (0.6.1)
     childprocess (0.5.3)
       ffi (~> 1.0, >= 1.0.11)
@@ -30,11 +23,10 @@ GEM
       json (>= 1.7.7)
     given_core (3.5.4)
       sorcerer (>= 0.3.7)
-    jmespath (1.0.2)
-      multi_json (~> 1.0)
     json (1.8.1)
-    multi_json (1.10.1)
-    multi_xml (0.5.5)
+    mini_portile (0.6.0)
+    nokogiri (1.6.3.1)
+      mini_portile (= 0.6.0)
     rack (1.5.2)
     rack-protection (1.5.3)
       rack
@@ -64,7 +56,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  aws-sdk (~> 2)
+  aws-sdk
   fpm
   rspec
   rspec-given
