@@ -10,7 +10,7 @@ module Ploy
     def query
       r = {}
       puts "query"
-      Aws::EC2.Resource.new.instances.tagged_values(@stack).each do |i|
+      Aws::EC2::Resource.new.instances.tagged_values(@stack).each do |i|
         puts "asking #{i.private_ip_address}"
         r[i.private_ip_address] = meta(i)
       end
