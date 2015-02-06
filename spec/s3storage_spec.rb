@@ -29,7 +29,9 @@ describe Ploy::S3Storage do
 
       s3 = double("s3")
       s3.should_receive(:buckets) { buckets }
-      Aws::S3::Resource.stub(:new) { s3 }
+      s3r = double("s3r")
+      s3r.stub(:new) { s3 }
+      Aws::S3.stub(:Resource) { s3r }
       
       @storage.put(fakepath, uploadpath)
     end
@@ -53,7 +55,9 @@ describe Ploy::S3Storage do
 
       s3 = double("s3")
       s3.should_receive(:buckets) { buckets }
-      Aws::S3::Resource.stub(:new) { s3 }
+      s3r = double("s3r")
+      s3r.stub(:new) { s3 }
+      Aws::S3.stub(:Resource) { s3r }
     
       @storage.copy(from, to) 
     end
@@ -82,7 +86,9 @@ describe Ploy::S3Storage do
 
       s3 = double("s3")
       s3.should_receive(:buckets) { buckets }
-      Aws::S3::Resource.stub(:new) { s3 }
+      s3r = double("s3r")
+      s3r.stub(:new) { s3 }
+      Aws::S3.stub(:Resource) { s3r }
 
       @storage.get(from, fakeio)
     end
