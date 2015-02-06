@@ -3,8 +3,6 @@ GEM
   specs:
     arr-pm (0.0.9)
       cabin (> 0)
-    aws-sdk (1.61.0)
-      aws-sdk-v1 (= 1.61.0)
     aws-sdk-v1 (1.61.0)
       json (~> 1.4)
       nokogiri (>= 1.4.4)
@@ -59,7 +57,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  aws-sdk (~> 1)
+  aws-sdk-v1
   fpm
   rspec
   rspec-given
