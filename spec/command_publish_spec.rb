@@ -4,12 +4,10 @@ describe Ploy::Command::Publish do
   describe "#run" do
     it "will run Publisher#publish with correct arguments and return true" do
       pub = double("publisher")
-      pub.should_receive(:publish) { [] }
-      Ploy::Publisher.should_receive(:new).with("test.yml") { pub }
-      subject = Ploy::Command::Publish.new
-      subject.stub(:is_pull_request_build) { false }
-      argv = ["test.yml"]
-      expect(subject.run(argv)).to be true
+      expect(pub).to receive(:publish).and_return([])
+      expect(Ploy::Publisher).to receive(:new).with('test.yml').and_return(pub)
+      expect_any_instance_of(Ploy::Command::Publish).to receive(:is_pull_request_build).and_return(false)
+      expect(Ploy::Command::Publish.new.run ['test.yml']).to be true
     end
   end
   describe "#help" do
