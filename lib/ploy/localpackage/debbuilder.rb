@@ -50,6 +50,7 @@ module Ploy
           { "-C" => dir },
           { "--deb-field" => "'gitrev: #{@sha}'" },
           "-f",
+          "--deb-no-default-config-files",
           { "-v" => safeversion(@timestamp + '.' + @branch) },
         ]
 
