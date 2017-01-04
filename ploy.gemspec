@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.authors = ["Michael Bruce", "Brian J. Schrock", "Dustin Watson"]
   s.email = 'mbruce@manta.com'
   s.files += Dir['lib/**/*.rb']
-  s.add_runtime_dependency 'aws-sdk-v1'
+  s.add_runtime_dependency 'aws-sdk-v1', '1.64'
   s.add_runtime_dependency 'fpm'
   s.add_runtime_dependency 'sinatra'
   s.executables << 'ploy'
