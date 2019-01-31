@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name = 'ploy'
-  s.version = '0.0.39'
-  s.date = '2017-01-03'
+  s.version = '0.0.40'
+  s.date = '2019-01-31'
   s.summary = 'Multi-phase deployment tool'
   s.description = 'Multi-phase deployment tool for use in a continuous deployment environment.'
   s.authors = ["Michael Bruce", "Brian J. Schrock", "Dustin Watson"]
