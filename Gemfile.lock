@@ -1,6 +1,8 @@
 GEM
   remote: http://rubygems.org/
   specs:
+    addressable (2.8.1)
+      public_suffix (>= 2.0.2, < 6.0)
     arr-pm (0.0.10)
       cabin (> 0)
     aws-sdk-v1 (1.64.0)
@@ -26,7 +28,8 @@ GEM
       pleaserun (~> 0.0.29)
       ruby-xz (~> 0.2.3)
       stud
-    git (1.8.1)
+    git (1.13.0)
+      addressable (~> 2.8)
       rchardet (~> 1.8)
     given_core (3.8.2)
       sorcerer (>= 0.3.7)
@@ -44,6 +47,7 @@ GEM
       insist
       mustache (= 0.99.8)
       stud
+    public_suffix (5.0.1)
     rack (1.6.13)
     rack-protection (1.5.5)
       rack
