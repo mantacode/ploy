@@ -48,11 +48,16 @@ dist_dirs:
 prep_cmd: lineman build
 upstart_files:
  - conf/some-project-initfile
+systemd_files:
+ - conf/some-project-sysfile
+mnt_log_path: path/to/service/logs
 postinst: |
   # This script will be in /var/lib/dpkg/info/${PACKAGE_NAME}.postinst
   # once the package is installed. Ploy adds #!/bin/bash to the top
   # automatically.
 ```
+**Note:**
+`systemd_files` and `mnt_log_path` are necessary if you want to install the service using systemd. If you don't want to use systemd, you can ignore these fields.
 
 ### metadata files
 
