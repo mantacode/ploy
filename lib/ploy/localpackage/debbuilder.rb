@@ -10,6 +10,8 @@ module Ploy
       attr_accessor :branch
       attr_accessor :timestamp
       attr_accessor :upstart_files
+      attr_accessor :systemd_files
+      attr_accessor :mnt_log_path
       attr_accessor :dist_dirs
       attr_accessor :dist_dir
       attr_accessor :prefix
@@ -35,7 +37,9 @@ module Ploy
             ol = fpm_optlist(dir)
             ol.add("--after-install", file.path)
             #puts "debug: fpm #{ol.as_string} ."
-            info = eval(`fpm #{ol.as_string} .`)
+            output = `fpm #{ol.as_string} .`
+            output = output.gsub("Adding action files", "")
+            info = eval(output)
           end
         end
         return info[:path]
@@ -54,12 +58,20 @@ module Ploy
           { "-v" => safeversion(@timestamp + '.' + @branch) },
         ]
 
-        if @upstart_files then
+        if @upstart_files && !@systemd_files then
           @upstart_files.each do | upstart |
             optlist.add("--deb-upstart", upstart)
           end
         end
 
+        if @systemd_files then
+          @systemd_files.each do | systemd |
+            optlist.add("--deb-systemd", systemd)
+            optlist.add("--deb-systemd-auto-start", "")
+            optlist.add("--deb-systemd-restart-after-upgrade", "")
+            optlist.add("--deb-systemd-enable", "")
+          end
+        end
         return optlist
       end
 
@@ -90,7 +102,7 @@ module Ploy
 # END PACKAGE POSTINST
 SCRIPT
 
-        if @upstart_files then
+        if @upstart_files && !@systemd_files then
           @upstart_files.each do | upstart |
             service = File.basename(upstart)
             file.write <<SCRIPT
@@ -105,6 +117,16 @@ if check_upstart_service #{service}; then
   stop #{service}
 fi
 start #{service}
+SCRIPT
+          end
+        elsif @systemd_files then
+          @systemd_files.each do | systemd |
+            service = File.basename(systemd)
+            mnt_log = @mnt_log_path ? @mnt_log_path : "/mnt/" + service
+            file.write <<SCRIPT
+# Systemd after script
+mkdir -p #{mnt_log}
+
 SCRIPT
           end
         end
