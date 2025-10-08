@@ -122,12 +122,12 @@ $ gem build ploy.gemspec
 
 ## Requirements
 
- - ruby 1.9+
- - fpm
+ - ruby 2.7.8+
+ - fpm 1.15.1+
  - rsync
  - dpkg (for tests)
 
-Known to work on OSX and Ubuntu.
+Known to work on macOS and Ubuntu.
 
 ### Legal
 
