@@ -60,6 +60,79 @@ describe Ploy::S3Storage do
   end
 
   describe "#read" do
+    it "reads content from S3 object" do
+      from = "a/b/c.txt"
+      content = "file content"
+
+      object = double("object")
+      object.should_receive(:read).and_return(content)
+
+      objects = double("objects")
+      objects.should_receive(:[]).with(from).and_return(object)
+
+      bucket = double("bucket")
+      bucket.stub(:objects).and_return(objects)
+
+      buckets = double("buckets")
+      buckets.should_receive(:[]).with("testbucket").and_return(bucket)
+
+      s3 = double("s3")
+      s3.should_receive(:buckets).and_return(buckets)
+      AWS::S3.stub(:new).and_return(s3)
+
+      result = @storage.read(from)
+      expect(result).to eq(content)
+    end
+  end
+
+  describe "#metadata" do
+    it "returns metadata when object exists" do
+      location = "some/path.deb"
+      meta = {'git_revision' => 'abc123', 'custom_field' => 'value'}
+
+      object = double("object")
+      object.should_receive(:exists?).and_return(true)
+      object.should_receive(:metadata).and_return(meta)
+
+      objects = double("objects")
+      objects.should_receive(:[]).with(location).and_return(object)
+
+      bucket = double("bucket")
+      bucket.stub(:objects).and_return(objects)
+
+      buckets = double("buckets")
+      buckets.should_receive(:[]).with("testbucket").and_return(bucket)
+
+      s3 = double("s3")
+      s3.should_receive(:buckets).and_return(buckets)
+      AWS::S3.stub(:new).and_return(s3)
+
+      result = @storage.metadata(location)
+      expect(result).to eq(meta)
+    end
+
+    it "returns empty hash when object does not exist" do
+      location = "nonexistent/path.deb"
+
+      object = double("object")
+      object.should_receive(:exists?).and_return(false)
+
+      objects = double("objects")
+      objects.should_receive(:[]).with(location).and_return(object)
+
+      bucket = double("bucket")
+      bucket.stub(:objects).and_return(objects)
+
+      buckets = double("buckets")
+      buckets.should_receive(:[]).with("testbucket").and_return(bucket)
+
+      s3 = double("s3")
+      s3.should_receive(:buckets).and_return(buckets)
+      AWS::S3.stub(:new).and_return(s3)
+
+      result = @storage.metadata(location)
+      expect(result).to eq({})
+    end
   end
 
   describe "#get" do
