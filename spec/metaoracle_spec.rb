@@ -13,11 +13,12 @@ describe Ploy::MetaOracle do
       allow(instance1).to receive(:private_ip_address).and_return('1.1.1.1')
       allow(instance2).to receive(:private_ip_address).and_return('2.2.2.2')
 
-      ec2 = double('ec2')
       instances = double('instances')
-      allow(AWS::EC2).to receive(:new).and_return(ec2)
-      allow(ec2).to receive(:instances).and_return(instances)
-      allow(instances).to receive(:tagged_values).with('test-stack').and_return([instance1, instance2])
+      allow(instances).to receive(:each).and_yield(instance1).and_yield(instance2)
+
+      ec2 = double('ec2')
+      allow(ec2).to receive(:instances).with(filters: [{name: 'tag:Name', values: ['test-stack']}]).and_return(instances)
+      allow(Aws::EC2::Resource).to receive(:new).and_return(ec2)
 
       oracle = Ploy::MetaOracle.new('test-stack')
       allow(oracle).to receive(:meta).with(instance1).and_return({'pkg1' => {'version' => 'v1'}})

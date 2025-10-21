@@ -2,6 +2,14 @@ require 'rspec/given'
 require 'ploy/packageset'
 
 describe Ploy::PackageSet do
+  before(:each) do
+    # Mock AWS SDK to prevent real AWS calls
+    bucket = double("bucket")
+    s3 = double("s3")
+    allow(s3).to receive(:bucket).and_return(bucket)
+    allow(Aws::S3::Resource).to receive(:new).and_return(s3)
+  end
+
   context "packageset with two packages, unlocked" do
     Given(:ps) do
       Ploy::PackageSet.new(
