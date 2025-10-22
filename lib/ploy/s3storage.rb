@@ -1,53 +1,57 @@
-require 'aws-sdk-v1'
+require 'aws-sdk-s3'
 
 module Ploy
   class S3Storage
     def initialize(bucket)
       @bucketname = bucket
+      @s3 = Aws::S3::Resource.new
+      @bucket = @s3.bucket(@bucketname)
     end
 
     def put(path, name, meta = {})
-      AWS::S3.new.buckets[@bucketname].objects[name].write(
-        Pathname.new(path),
-        { :metadata => meta }
-      )
+      obj = @bucket.object(name)
+      File.open(path.to_s, 'rb') do |file|
+        obj.put(body: file, metadata: meta)
+      end
     end
 
     def copy(from, to)
-      AWS::S3.new.buckets[@bucketname].objects[from].copy_to(to)
+      @bucket.object(to).copy_from(
+        copy_source: "#{@bucketname}/#{from}"
+      )
     end
 
     def read(from)
-      AWS::S3.new.buckets[@bucketname].objects[from].read
+      @bucket.object(from).get.body.read
     end
 
     def get(from, fileio)
-      AWS::S3.new.buckets[@bucketname].objects[from].read do |chunk|
+      @bucket.object(from).get do |chunk|
         fileio.write(chunk)
       end
       fileio.flush
     end
 
     def metadata(loc)
-      o = AWS::S3.new.buckets[@bucketname].objects[loc] 
-      if (o.exists?) then
-        return o.metadata
-      else
-        return {}
+      obj = @bucket.object(loc)
+      begin
+        obj.head.metadata
+      rescue Aws::S3::Errors::NotFound
+        {}
       end
     end
 
     def list
-      tree = AWS::S3.new.buckets[@bucketname].as_tree
-      dirs = tree.children.select(&:branch?).collect(&:prefix)
       package_names = []
-      dirs.each do |dir|
-        dir.chop!
-        if dir != 'hub' && dir != 'blessed' && dir != 'staging'
-          package_names.push(dir)
+      # List objects with delimiter to get "directories"
+      @bucket.objects(delimiter: '/').each do |obj_summary|
+        prefix = obj_summary.key
+        prefix.chop! if prefix.end_with?('/')
+        unless ['hub', 'blessed', 'staging'].include?(prefix)
+          package_names.push(prefix)
         end
       end
-      return package_names
+      package_names
     end
   end
 end

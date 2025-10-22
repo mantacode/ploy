@@ -1,9 +1,12 @@
 source 'http://rubygems.org'
-gem 'aws-sdk-v1', '1.64'
-gem 'fpm', '1.12.0'
-gem 'sinatra', '1.4.6'
-gem 'nokogiri', '1.10.0'
+gem 'aws-sdk-s3', '~> 1.140'
+gem 'aws-sdk-ec2', '~> 1.450'
+gem 'fpm', '1.15.1'
+gem 'sinatra', '~> 2.2'
+gem 'nokogiri', '~> 1.15'
+gem 'rexml'  # Required for Ruby 3.0+
+gem 'webrick', '~> 1.8'  # Required for Ruby 3.0+ (Sinatra web server)
 group :test do
-  gem 'rspec'
-  gem 'rspec-given'
+  gem 'rspec', '~> 3.12'
+  gem 'rspec-given', '~> 3.8'
 end

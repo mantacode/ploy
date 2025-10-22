@@ -1,3 +1,5 @@
+require 'ploy/package'
+
 module Ploy
   class PackageSet
     attr_accessor :packages

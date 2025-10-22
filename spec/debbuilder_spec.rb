@@ -86,4 +86,88 @@ describe Ploy::LocalPackage::DebBuilder do
       it_behaves_like "basic deb"
     end
   end
+
+  context "with systemd files" do
+    Given(:db) do
+      Ploy::LocalPackage::DebBuilder.new(
+        :name          => 'some-project',
+        :sha           => 'fakesha',
+        :branch        => 'fakebranch',
+        :timestamp     => '123456',
+        :systemd_files => ['spec/resources/conf/some-project.service'],
+        :mnt_log_path  => '/mnt/some-project-logs',
+        :dist_dir      => 'spec/resources/dist',
+        :prefix        => '/usr/local/someproject',
+        :postinst      => 'systemdpostinst'
+      )
+    end
+
+    context "building a deb file with systemd" do
+      When(:filename) { cur_f = db.build_deb; cur_f }
+      Then { File.exists? filename }
+      And  { `dpkg-deb -f #{filename} Version`.chomp == '123456.fakebranch' }
+      And  { `dpkg-deb -c #{filename}` =~ / \.\/usr\/local\/someproject\/file.txt\n/ }
+      And  { `dpkg-deb -c #{filename}` =~ / \.\/lib\/systemd\/system\/some-project.service\n/ }
+      And  { `dpkg-deb -c #{filename}` =~ / \.\/etc\/ploy\/metadata.d\/some-project.yml\n/ }
+      And  { `dpkg-deb -f #{filename} gitrev`.chomp == 'fakesha' }
+      And  { `dpkg-deb -I #{filename} postinst` =~ /^#!\/bin\/bash/ }
+      And  { `dpkg-deb -I #{filename} postinst` =~ /systemdpostinst/ }
+      And  { `dpkg-deb -I #{filename} postinst` =~ /mkdir -p \/mnt\/some-project-logs/ }
+      And  { `dpkg-deb -I #{filename} postinst` !~ /check_upstart_service/ }
+      after(:all) do
+        File.delete(cur_f)
+      end
+    end
+  end
+
+  context "with systemd files and default mnt_log_path" do
+    Given(:db) do
+      Ploy::LocalPackage::DebBuilder.new(
+        :name          => 'some-project',
+        :sha           => 'fakesha',
+        :branch        => 'fakebranch',
+        :timestamp     => '123456',
+        :systemd_files => ['spec/resources/conf/some-project.service'],
+        :dist_dir      => 'spec/resources/dist',
+        :prefix        => '/usr/local/someproject',
+        :postinst      => 'systemdpostinst'
+      )
+    end
+
+    context "building a deb file with systemd and default log path" do
+      When(:filename) { cur_f = db.build_deb; cur_f }
+      Then { File.exists? filename }
+      And  { `dpkg-deb -I #{filename} postinst` =~ /mkdir -p \/mnt\/some-project.service/ }
+      after(:all) do
+        File.delete(cur_f)
+      end
+    end
+  end
+
+  context "with both upstart and systemd files" do
+    Given(:db) do
+      Ploy::LocalPackage::DebBuilder.new(
+        :name          => 'some-project',
+        :sha           => 'fakesha',
+        :branch        => 'fakebranch',
+        :timestamp     => '123456',
+        :upstart_files => ['spec/resources/conf/some-project-initfile'],
+        :systemd_files => ['spec/resources/conf/some-project.service'],
+        :dist_dir      => 'spec/resources/dist',
+        :prefix        => '/usr/local/someproject',
+        :postinst      => 'bothpostinst'
+      )
+    end
+
+    context "building a deb file with both init systems prefers systemd" do
+      When(:filename) { cur_f = db.build_deb; cur_f }
+      Then { File.exists? filename }
+      And  { `dpkg-deb -c #{filename}` =~ / \.\/lib\/systemd\/system\/some-project.service\n/ }
+      And  { `dpkg-deb -c #{filename}` !~ / \.\/etc\/init\/some-project-initfile.conf\n/ }
+      And  { `dpkg-deb -I #{filename} postinst` !~ /check_upstart_service/ }
+      after(:all) do
+        File.delete(cur_f)
+      end
+    end
+  end
 end

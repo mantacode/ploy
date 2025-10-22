@@ -1,16 +1,19 @@
 require 'net/http'
 require 'json'
+require 'aws-sdk-ec2'
 
 module Ploy
   class MetaOracle
     def initialize(stack)
       @stack = stack
+      @ec2 = Aws::EC2::Resource.new
     end
 
     def query
       r = {}
       puts "query"
-      AWS::EC2.new.instances.tagged_values(@stack).each do |i|
+      # Find instances with the stack tag
+      @ec2.instances(filters: [{name: 'tag:Name', values: [@stack]}]).each do |i|
         puts "asking #{i.private_ip_address}"
         r[i.private_ip_address] = meta(i)
       end

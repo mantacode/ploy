@@ -43,6 +43,25 @@ describe Ploy::Package do
       )
       @inst.bless
     end
+
+    it "returns a blessed package with correct attributes" do
+      Ploy::S3Storage.any_instance.stub(:copy)
+      blessed = @inst.bless
+      expect(blessed).to be_a(Ploy::Package)
+      expect(blessed.deploy_name).to eq("some-project")
+      expect(blessed.branch).to eq("master")
+      expect(blessed.version).to eq("current")
+      expect(blessed.variant).to eq("blessed")
+    end
+
+    it "supports custom variants" do
+      Ploy::S3Storage.any_instance.should_receive(:copy).with(
+        Ploy::Util.remote_name("some-project", "master", "current"),
+        Ploy::Util.remote_name("some-project", "master", "current", "staging")
+      )
+      blessed = @inst.bless("staging")
+      expect(blessed.variant).to eq("staging")
+    end
   end
 
   describe "#upload" do
