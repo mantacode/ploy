@@ -122,8 +122,10 @@ $ gem build ploy.gemspec
 
 ## Requirements
 
- - ruby 2.7.8+
+ - ruby 3.1.6
  - fpm 1.15.1+
+ - aws-sdk-s3
+ - aws-sdk-ec2
  - rsync
  - dpkg (for tests)
 
